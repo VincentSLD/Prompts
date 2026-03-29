@@ -1004,23 +1004,213 @@ let selectedCategory = 'general';
 // INSPIRATIONS DATA
 // ══════════════════════════════════════
 const INSPIRATIONS = [
-  { cat: 'image', title: 'Portrait cinématique', desc: 'Photo portrait avec éclairage et composition cinéma' },
-  { cat: 'image', title: 'Paysage fantastique', desc: 'Scène épique d\'un monde imaginaire' },
-  { cat: 'image', title: 'Logo minimaliste', desc: 'Logo moderne et épuré pour une marque' },
-  { cat: 'image', title: 'Produit e-commerce', desc: 'Photo produit studio professionnelle' },
-  { cat: 'llm', title: 'Rédacteur expert', desc: 'Rédiger comme un spécialiste du domaine' },
-  { cat: 'llm', title: 'Traducteur nuancé', desc: 'Traduction qui préserve le ton et le style' },
-  { cat: 'llm', title: 'Tuteur pédagogue', desc: 'Expliquer un concept complexe simplement' },
-  { cat: 'llm', title: 'Correcteur de texte', desc: 'Relecture avec suggestions d\'amélioration' },
-  { cat: 'code', title: 'API REST', desc: 'Concevoir une API avec bonnes pratiques' },
-  { cat: 'code', title: 'Refactoring', desc: 'Améliorer la qualité d\'un code existant' },
-  { cat: 'code', title: 'Tests unitaires', desc: 'Générer des tests complets pour une fonction' },
-  { cat: 'code', title: 'Debug assistant', desc: 'Analyser et résoudre un bug' },
-  { cat: 'code', title: 'Application HTML', desc: 'Créer une app web complète en HTML/CSS/JS' },
-  { cat: 'general', title: 'Comparatif décisionnel', desc: 'Comparer des options pour décider' },
-  { cat: 'general', title: 'Plan d\'action', desc: 'Structurer un projet étape par étape' },
-  { cat: 'general', title: 'Brainstorming', desc: 'Générer des idées créatives sur un sujet' },
-  { cat: 'general', title: 'Synthèse de document', desc: 'Résumer un long texte en points clés' },
+  // ── IMAGE (50) ──
+  { cat: 'image', title: 'Portrait cinématique', desc: 'Éclairage et composition cinéma', prefill: 'Un portrait cinématique avec éclairage Rembrandt, profondeur de champ faible, tons chauds ambrés, grain de film 35mm' },
+  { cat: 'image', title: 'Paysage fantastique', desc: 'Monde imaginaire épique', prefill: 'Un paysage fantastique avec lumière volumétrique dorée, atmosphère mystique, style matte painting, perspective aérienne' },
+  { cat: 'image', title: 'Logo minimaliste', desc: 'Logo moderne et épuré', prefill: 'Un logo minimaliste flat design pour une marque tech, icône géométrique, palette limitée à 2 couleurs, fond blanc' },
+  { cat: 'image', title: 'Produit e-commerce', desc: 'Photo produit studio', prefill: 'Une photo produit professionnelle sur fond blanc, éclairage studio trois points, ombres douces, style catalogue de luxe' },
+  { cat: 'image', title: 'Architecture futuriste', desc: 'Bâtiment sci-fi détaillé', prefill: 'Un bâtiment d\'architecture futuriste, verre et acier, lignes courbes organiques, éclairage néon bleu, environnement urbain de nuit' },
+  { cat: 'image', title: 'Nature morte', desc: 'Composition artistique d\'objets', prefill: 'Une nature morte artistique avec fruits et céramique, style peinture flamande, éclairage clair-obscur, couleurs riches' },
+  { cat: 'image', title: 'Affiche rétro', desc: 'Style vintage années 50-70', prefill: 'Une affiche publicitaire rétro style années 60, couleurs pastels, typographie vintage, composition graphique forte' },
+  { cat: 'image', title: 'Personnage fantasy', desc: 'Héros ou créature imaginaire', prefill: 'Un personnage de fantasy, guerrier elfe en armure ornée, forêt enchantée en arrière-plan, éclairage magique, style illustration détaillée' },
+  { cat: 'image', title: 'Street photography', desc: 'Scène de rue authentique', prefill: 'Une photo de rue en noir et blanc, ambiance urbaine, jeu d\'ombres et lumière naturelle, moment décisif, style documentaire' },
+  { cat: 'image', title: 'Illustration enfant', desc: 'Dessin pour livre jeunesse', prefill: 'Une illustration pour livre pour enfants, personnages mignons, couleurs vives et douces, style aquarelle, ambiance joyeuse' },
+  { cat: 'image', title: 'Texture abstraite', desc: 'Motif graphique et abstrait', prefill: 'Une texture abstraite avec formes géométriques fluides, dégradés de couleurs vibrants, style art digital, haute résolution' },
+  { cat: 'image', title: 'Mockup packaging', desc: 'Emballage produit réaliste', prefill: 'Un mockup d\'emballage produit réaliste, boîte en carton premium, design épuré, environnement studio, ombres portées naturelles' },
+  { cat: 'image', title: 'Scène cyberpunk', desc: 'Ville néon futuriste', prefill: 'Une scène cyberpunk nocturne, néons roses et bleus, pluie sur asphalte, hologrammes, foule de personnages, perspective plongeante' },
+  { cat: 'image', title: 'Portrait animal', desc: 'Animal stylisé ou réaliste', prefill: 'Un portrait animalier majestueux, lion face caméra, éclairage dramatique doré, fond sombre, détails fourrure ultra-réalistes' },
+  { cat: 'image', title: 'Flat illustration', desc: 'Illustration vectorielle moderne', prefill: 'Une illustration flat design moderne pour site web, personnages stylisés, couleurs corporate, scène de travail collaboratif' },
+  { cat: 'image', title: 'Photo culinaire', desc: 'Plat gastronomique appétissant', prefill: 'Une photo culinaire gastronomique, plat dressé avec soin, éclairage naturel latéral, profondeur de champ faible, style magazine' },
+  { cat: 'image', title: 'Scène isométrique', desc: 'Vue 3D isométrique détaillée', prefill: 'Une scène isométrique 3D d\'un espace de coworking, détails miniatures, couleurs pastels, éclairage doux, style low-poly' },
+  { cat: 'image', title: 'Couverture album', desc: 'Artwork musical marquant', prefill: 'Une couverture d\'album musicale, style artistique unique, ambiance mélancolique, composition centrée, typographie intégrée' },
+  { cat: 'image', title: 'Pattern seamless', desc: 'Motif répétitif pour design', prefill: 'Un motif seamless pattern de feuilles tropicales, style botanical illustration, fond crème, couleurs naturelles, tileable' },
+  { cat: 'image', title: 'Infographie visuelle', desc: 'Données en graphiques attractifs', prefill: 'Une infographie visuelle moderne avec icônes, graphiques en barres et cercles, palette cohérente, hiérarchie claire de l\'information' },
+  { cat: 'image', title: 'Portrait double exposition', desc: 'Effet artistique superposé', prefill: 'Un portrait en double exposition, visage humain fusionné avec une forêt de pins, tons bleus et verts, effet éthéré' },
+  { cat: 'image', title: 'Environnement post-apo', desc: 'Décor après catastrophe', prefill: 'Un paysage post-apocalyptique, ville en ruines envahie par la végétation, ciel orangé, atmosphère de désolation poétique' },
+  { cat: 'image', title: 'UI design mockup', desc: 'Interface application mobile', prefill: 'Un mockup d\'interface mobile moderne, dark mode, composants arrondis, icônes minimalistes, écran d\'accueil d\'app de fitness' },
+  { cat: 'image', title: 'Carte illustrée', desc: 'Plan stylisé d\'un lieu', prefill: 'Une carte illustrée d\'une ville touristique, style dessin à la main, monuments en relief, couleurs chaudes, légende intégrée' },
+  { cat: 'image', title: 'Effet glitch art', desc: 'Distorsion digitale créative', prefill: 'Un portrait avec effet glitch art, distorsions de pixels, bandes de couleur décalées RGB, fond noir, style digital punk' },
+  { cat: 'image', title: 'Scène sous-marine', desc: 'Monde aquatique détaillé', prefill: 'Une scène sous-marine avec récif de corail coloré, rayons de lumière filtrant depuis la surface, poissons tropicaux, style photoréaliste' },
+  { cat: 'image', title: 'Calligraphie décorative', desc: 'Lettering artistique', prefill: 'Une composition de calligraphie moderne, mot inspirant, encre noire sur fond texturé, ornements floraux, style hand lettering' },
+  { cat: 'image', title: 'Concept car', desc: 'Véhicule du futur', prefill: 'Un concept car futuriste, lignes aérodynamiques, carrosserie blanche et chrome, environnement studio sombre, reflets dramatiques' },
+  { cat: 'image', title: 'Photo macro', desc: 'Détail en gros plan extrême', prefill: 'Une photographie macro d\'une goutte de rosée sur pétale de fleur, reflets arc-en-ciel, bokeh coloré en arrière-plan, netteté extrême' },
+  { cat: 'image', title: 'Scène steampunk', desc: 'Univers victorien mécanique', prefill: 'Une scène steampunk avec engrenages dorés, machines à vapeur, intérieur d\'atelier victorien, éclairage cuivré et ambiance chaude' },
+  { cat: 'image', title: 'Icônes app', desc: 'Set d\'icônes cohérentes', prefill: 'Un set de 12 icônes pour application mobile, style ligne fine, coins arrondis, couleur unique accent, fond transparent, 64x64px' },
+  { cat: 'image', title: 'Portrait pop art', desc: 'Style Warhol coloré', prefill: 'Un portrait style pop art Warhol, aplats de couleurs vives, contours noirs marqués, fond graphique, composition en quadriptyque' },
+  { cat: 'image', title: 'Paysage japonais', desc: 'Scène zen et poétique', prefill: 'Un paysage japonais avec temple shinto, cerisiers en fleurs, brume matinale, reflet dans l\'eau, style ukiyo-e modernisé' },
+  { cat: 'image', title: 'Lettre manuscrite', desc: 'Typographie et papier vintage', prefill: 'Une lettre manuscrite sur papier vieilli, encre sépia, bords brûlés, cachet de cire rouge, style correspondance ancienne' },
+  { cat: 'image', title: 'Sport en action', desc: 'Mouvement figé dynamique', prefill: 'Une photo de sport en action, basketteur en plein dunk, mouvement figé, éclairage dramatique, gouttes de sueur, style ESPN' },
+  { cat: 'image', title: 'Mandala géométrique', desc: 'Motif circulaire complexe', prefill: 'Un mandala géométrique complexe, symétrie parfaite, détails fins, dégradé doré sur fond noir, style sacré moderne' },
+  { cat: 'image', title: 'Intérieur design', desc: 'Pièce d\'architecte d\'intérieur', prefill: 'Un intérieur design scandinave, salon lumineux, meubles en bois clair, plantes vertes, lumière naturelle, style magazine déco' },
+  { cat: 'image', title: 'Coucher de soleil', desc: 'Ciel spectaculaire', prefill: 'Un coucher de soleil spectaculaire sur l\'océan, nuages dramatiques oranges et violets, silhouette de palmiers, reflets sur l\'eau' },
+  { cat: 'image', title: 'Character design', desc: 'Fiche personnage de jeu', prefill: 'Une fiche character design pour jeu vidéo, personnage vu de face/profil/dos, tenue détaillée, palette de couleurs, annotations' },
+  { cat: 'image', title: 'Photo noir et blanc', desc: 'Contraste dramatique', prefill: 'Un portrait noir et blanc à fort contraste, éclairage latéral, ombres profondes, grain argentique, style photographe classique' },
+  { cat: 'image', title: 'Maquette 3D', desc: 'Rendu architectural réaliste', prefill: 'Un rendu 3D architectural d\'une maison moderne, grandes baies vitrées, piscine à débordement, jardin paysager, golden hour' },
+  { cat: 'image', title: 'Pixel art rétro', desc: 'Sprite style jeu 16-bit', prefill: 'Un sprite pixel art style jeu 16-bit, personnage héroïque, animation idle, palette limitée 16 couleurs, fond transparent' },
+  { cat: 'image', title: 'Affiche de film', desc: 'Poster cinéma impactant', prefill: 'Une affiche de film thriller, composition dramatique avec personnage principal, titre en gros, palette sombre avec accent rouge' },
+  { cat: 'image', title: 'Mode fashion', desc: 'Photo éditoriale haute couture', prefill: 'Une photo de mode éditoriale, mannequin en tenue haute couture, pose dynamique, éclairage studio créatif, fond minimaliste' },
+  { cat: 'image', title: 'Carte de visite', desc: 'Business card premium', prefill: 'Un design de carte de visite premium, recto-verso, fond noir mat, typographie dorée, logo en relief, style luxe minimaliste' },
+  { cat: 'image', title: 'Vue aérienne drone', desc: 'Paysage vu du ciel', prefill: 'Une vue aérienne drone d\'une plage turquoise, motifs de sable et récifs, bateaux miniatures, couleurs saturées, composition centrée' },
+  { cat: 'image', title: 'Art déco motif', desc: 'Style géométrique 1920s', prefill: 'Un motif art déco style années 1920, formes géométriques symétriques, dorure sur fond noir profond, lignes élégantes' },
+  { cat: 'image', title: 'Aquarelle botanique', desc: 'Planche botanique peinte', prefill: 'Une planche botanique à l\'aquarelle, espèce de fleur détaillée, annotations scientifiques, fond papier crème, style naturaliste' },
+  { cat: 'image', title: 'Emoji custom', desc: 'Émoticône personnalisée', prefill: 'Un set d\'emojis custom pour Discord/Slack, expressions variées, style kawaii, contours nets, fond transparent, 128x128px' },
+  { cat: 'image', title: 'Bannière YouTube', desc: 'Header chaîne gaming', prefill: 'Une bannière YouTube gaming, style dynamique avec effets lumineux, pseudo en 3D, personnages de jeu, dimensions 2560x1440' },
+
+  // ── LLM (50) ──
+  { cat: 'llm', title: 'Rédacteur expert', desc: 'Rédiger comme un spécialiste', prefill: 'Un assistant rédacteur expert dans un domaine spécifique, capable d\'écrire des articles approfondis avec ton professionnel' },
+  { cat: 'llm', title: 'Traducteur nuancé', desc: 'Traduction fidèle au style', prefill: 'Un traducteur qui préserve le ton, les nuances culturelles et le style littéraire du texte original' },
+  { cat: 'llm', title: 'Tuteur pédagogue', desc: 'Expliquer simplement', prefill: 'Un tuteur patient qui explique des concepts complexes avec des analogies simples, adapté au niveau de l\'élève' },
+  { cat: 'llm', title: 'Correcteur de texte', desc: 'Relecture et amélioration', prefill: 'Un correcteur qui analyse grammaire, style, clarté et cohérence, avec suggestions d\'amélioration argumentées' },
+  { cat: 'llm', title: 'Coach carrière', desc: 'Conseils professionnels', prefill: 'Un coach carrière qui aide à rédiger CV, lettres de motivation et préparer des entretiens avec retours constructifs' },
+  { cat: 'llm', title: 'Copywriter', desc: 'Textes marketing percutants', prefill: 'Un copywriter créatif qui rédige des textes publicitaires accrocheurs, slogans, et descriptions produits persuasives' },
+  { cat: 'llm', title: 'Scénariste', desc: 'Écriture narrative et dialogues', prefill: 'Un scénariste qui aide à construire des histoires, développer des personnages et écrire des dialogues naturels' },
+  { cat: 'llm', title: 'Community manager', desc: 'Posts réseaux sociaux', prefill: 'Un CM qui crée des posts engageants pour les réseaux sociaux avec hashtags, CTA et ton adapté à chaque plateforme' },
+  { cat: 'llm', title: 'Rédacteur SEO', desc: 'Contenu optimisé référencement', prefill: 'Un rédacteur SEO qui produit des articles optimisés pour le référencement avec mots-clés, structure H1-H3, méta-descriptions' },
+  { cat: 'llm', title: 'Juriste vulgarisateur', desc: 'Simplifier le jargon juridique', prefill: 'Un assistant juridique qui explique des termes et concepts de droit en langage simple et accessible' },
+  { cat: 'llm', title: 'Nutritionniste IA', desc: 'Plans alimentaires personnalisés', prefill: 'Un nutritionniste qui propose des plans alimentaires personnalisés selon les objectifs, restrictions et préférences' },
+  { cat: 'llm', title: 'Philosophe socratique', desc: 'Questionnement et réflexion', prefill: 'Un philosophe qui utilise la méthode socratique pour aider à approfondir sa réflexion par des questions guidées' },
+  { cat: 'llm', title: 'Rédacteur email pro', desc: 'Emails efficaces et polis', prefill: 'Un assistant qui rédige des emails professionnels adaptés au contexte : relance, refus poli, demande, remerciement' },
+  { cat: 'llm', title: 'Générateur de noms', desc: 'Noms de marque et produit', prefill: 'Un créatif qui génère des noms de marque, produit ou projet avec analyse de disponibilité et connotations' },
+  { cat: 'llm', title: 'Résumeur de réunion', desc: 'Notes et actions clés', prefill: 'Un assistant qui transforme des notes de réunion brutes en compte-rendu structuré avec décisions et actions' },
+  { cat: 'llm', title: 'Préparateur entretien', desc: 'Questions et réponses types', prefill: 'Un coach d\'entretien qui génère des questions probables et aide à formuler des réponses STAR percutantes' },
+  { cat: 'llm', title: 'Storyteller de marque', desc: 'Récit d\'entreprise engageant', prefill: 'Un storyteller qui construit le récit de marque : origine, mission, valeurs, avec un fil narratif émotionnel' },
+  { cat: 'llm', title: 'Formateur en ligne', desc: 'Créer des modules de cours', prefill: 'Un concepteur pédagogique qui structure des modules de formation en ligne avec objectifs, exercices et évaluations' },
+  { cat: 'llm', title: 'Analyste SWOT', desc: 'Analyse forces/faiblesses', prefill: 'Un analyste stratégique qui réalise une analyse SWOT complète avec recommandations actionnables' },
+  { cat: 'llm', title: 'Rédacteur technique', desc: 'Documentation claire', prefill: 'Un rédacteur technique qui produit de la documentation utilisateur claire, structurée et illustrée d\'exemples' },
+  { cat: 'llm', title: 'Débatteur', desc: 'Arguments pour et contre', prefill: 'Un débatteur qui présente les arguments pour et contre un sujet de manière équilibrée et sourcée' },
+  { cat: 'llm', title: 'Créateur de quiz', desc: 'QCM et questions éducatives', prefill: 'Un assistant qui crée des quiz éducatifs avec QCM, vrai/faux, questions ouvertes et corrections détaillées' },
+  { cat: 'llm', title: 'Médiateur de conflit', desc: 'Résolution de désaccords', prefill: 'Un médiateur qui aide à reformuler des positions conflictuelles et propose des solutions de compromis' },
+  { cat: 'llm', title: 'Ghostwriter LinkedIn', desc: 'Posts LinkedIn viraux', prefill: 'Un ghostwriter spécialisé LinkedIn qui rédige des posts engageants avec storytelling, hook et CTA' },
+  { cat: 'llm', title: 'Assistant recherche', desc: 'Synthèse bibliographique', prefill: 'Un assistant de recherche qui analyse des sources, identifie les thèmes clés et produit une synthèse structurée' },
+  { cat: 'llm', title: 'Persona builder', desc: 'Profils utilisateurs détaillés', prefill: 'Un UX researcher qui crée des personas utilisateurs détaillées avec démographie, motivations, frustrations et scénarios' },
+  { cat: 'llm', title: 'Pitch deck narrator', desc: 'Textes pour présentation', prefill: 'Un assistant qui rédige les textes de chaque slide d\'un pitch deck : problème, solution, marché, traction, équipe, ask' },
+  { cat: 'llm', title: 'Rédacteur de brief', desc: 'Brief créatif structuré', prefill: 'Un directeur de création qui structure un brief créatif complet : contexte, objectifs, cible, ton, livrables, contraintes' },
+  { cat: 'llm', title: 'Coach productivité', desc: 'Organisation et méthodes', prefill: 'Un coach productivité qui propose des méthodes d\'organisation, priorisation des tâches et gestion du temps personnalisées' },
+  { cat: 'llm', title: 'Correcteur de ton', desc: 'Adapter le registre d\'un texte', prefill: 'Un assistant qui reformule un texte pour adapter son ton : plus formel, plus décontracté, plus empathique, plus assertif' },
+  { cat: 'llm', title: 'Générateur FAQ', desc: 'Questions fréquentes anticipées', prefill: 'Un assistant qui anticipe les questions fréquentes des utilisateurs sur un produit/service et rédige les réponses' },
+  { cat: 'llm', title: 'Animateur atelier', desc: 'Facilitation de workshop', prefill: 'Un facilitateur qui conçoit le déroulé d\'un atelier collaboratif avec icebreakers, activités et débriefs minutés' },
+  { cat: 'llm', title: 'Veille stratégique', desc: 'Analyse tendances secteur', prefill: 'Un analyste de veille qui identifie les tendances émergentes d\'un secteur et évalue leur impact stratégique' },
+  { cat: 'llm', title: 'Biographe personnel', desc: 'Raconter une histoire de vie', prefill: 'Un biographe qui structure et rédige un récit de vie à partir d\'anecdotes et souvenirs, avec un fil narratif engageant' },
+  { cat: 'llm', title: 'Simulateur client', desc: 'Jouer le rôle d\'un client', prefill: 'Un simulateur qui joue le rôle d\'un client type pour tester des argumentaires commerciaux avec objections réalistes' },
+  { cat: 'llm', title: 'Rédacteur de CGV', desc: 'Conditions générales claires', prefill: 'Un assistant juridique qui rédige des CGV/CGU claires et compréhensibles adaptées au type d\'activité' },
+  { cat: 'llm', title: 'Critique constructif', desc: 'Feedback bienveillant et utile', prefill: 'Un critique qui analyse un travail créatif avec feedback structuré : points forts, axes d\'amélioration, suggestions concrètes' },
+  { cat: 'llm', title: 'Planificateur voyage', desc: 'Itinéraire personnalisé', prefill: 'Un planificateur de voyage qui crée des itinéraires jour par jour avec budget, transports, hébergements et activités' },
+  { cat: 'llm', title: 'Négociateur salaire', desc: 'Stratégie de négociation', prefill: 'Un coach en négociation salariale qui prépare les arguments, anticipe les objections et propose des stratégies' },
+  { cat: 'llm', title: 'Rédacteur discours', desc: 'Allocutions et prises de parole', prefill: 'Un speechwriter qui rédige des discours impactants avec structure rhétorique, anecdotes et punchlines' },
+  { cat: 'llm', title: 'Data storyteller', desc: 'Narrer des données chiffrées', prefill: 'Un data storyteller qui transforme des données brutes en récit compréhensible avec insights et visualisations suggérées' },
+  { cat: 'llm', title: 'Prompt engineer', desc: 'Optimiser ses prompts', prefill: 'Un expert en prompt engineering qui analyse et optimise des prompts pour obtenir de meilleurs résultats des LLM' },
+  { cat: 'llm', title: 'Rédacteur newsletter', desc: 'Newsletter engageante', prefill: 'Un rédacteur qui compose des newsletters captivantes avec objet accrocheur, contenu structuré et CTA efficace' },
+  { cat: 'llm', title: 'Analyste de sentiment', desc: 'Évaluer le ton d\'un texte', prefill: 'Un analyste qui évalue le sentiment, le ton et les émotions d\'un texte avec score et recommandations' },
+  { cat: 'llm', title: 'Créateur de sondage', desc: 'Questions de survey efficaces', prefill: 'Un méthodologue qui conçoit des sondages avec questions bien formulées, échelles adaptées et biais minimisés' },
+  { cat: 'llm', title: 'Rédacteur de CV', desc: 'CV optimisé par métier', prefill: 'Un expert RH qui restructure et optimise un CV selon le poste visé avec mots-clés ATS et formulations percutantes' },
+  { cat: 'llm', title: 'Intervieweur expert', desc: 'Questions d\'interview profondes', prefill: 'Un journaliste qui prépare des questions d\'interview pertinentes, progressives et révélatrices adaptées à l\'invité' },
+  { cat: 'llm', title: 'Médiateur interculturel', desc: 'Adapter un message entre cultures', prefill: 'Un expert interculturel qui adapte un message ou une stratégie pour qu\'elle résonne dans différents contextes culturels' },
+  { cat: 'llm', title: 'Simplificateur', desc: 'Rendre accessible un texte complexe', prefill: 'Un vulgarisateur qui reformule un texte technique ou académique pour le rendre accessible à un public non-expert' },
+  { cat: 'llm', title: 'Modérateur de contenu', desc: 'Règles et guidelines communauté', prefill: 'Un community manager qui rédige des règles de modération claires, justes et applicables pour une communauté en ligne' },
+
+  // ── CODE (50) ──
+  { cat: 'code', title: 'API REST', desc: 'Endpoints avec bonnes pratiques', prefill: 'Concevoir une API REST complète avec routes CRUD, validation, gestion d\'erreurs, authentification JWT et documentation Swagger' },
+  { cat: 'code', title: 'Refactoring', desc: 'Améliorer un code existant', prefill: 'Refactorer un code legacy pour améliorer la lisibilité, les performances et la maintenabilité en suivant les principes SOLID' },
+  { cat: 'code', title: 'Tests unitaires', desc: 'Tests complets pour une fonction', prefill: 'Écrire des tests unitaires complets avec cas nominaux, cas limites, gestion d\'erreurs et mocks pour une fonction donnée' },
+  { cat: 'code', title: 'Debug assistant', desc: 'Analyser et résoudre un bug', prefill: 'Analyser un bug à partir du message d\'erreur et du code, identifier la cause racine et proposer un correctif avec explication' },
+  { cat: 'code', title: 'Application HTML', desc: 'App web complète en un fichier', prefill: 'Créer une application web complète en un seul fichier HTML avec CSS intégré et JavaScript vanilla, design moderne et responsive' },
+  { cat: 'code', title: 'Script d\'automatisation', desc: 'Automatiser une tâche répétitive', prefill: 'Un script Python/Bash qui automatise une tâche répétitive avec gestion des erreurs, logging et configuration par variables' },
+  { cat: 'code', title: 'Composant React', desc: 'Composant réutilisable typé', prefill: 'Un composant React TypeScript réutilisable avec props typées, états, hooks personnalisés et tests avec React Testing Library' },
+  { cat: 'code', title: 'Requête SQL complexe', desc: 'Jointures et agrégations avancées', prefill: 'Une requête SQL avec jointures multiples, sous-requêtes, agrégations, window functions et optimisation de performance' },
+  { cat: 'code', title: 'Pipeline CI/CD', desc: 'Workflow GitHub Actions', prefill: 'Un workflow GitHub Actions complet avec build, tests, lint, déploiement staging/prod et notifications' },
+  { cat: 'code', title: 'Schéma de base de données', desc: 'Modélisation relationnelle', prefill: 'Concevoir un schéma de base de données relationnelle normalisé avec tables, relations, index et contraintes pour une application' },
+  { cat: 'code', title: 'Websocket en temps réel', desc: 'Communication bidirectionnelle', prefill: 'Un serveur WebSocket avec gestion des rooms, broadcast, reconnexion automatique et heartbeat côté client et serveur' },
+  { cat: 'code', title: 'Middleware Express', desc: 'Intercepteur de requêtes', prefill: 'Un middleware Express.js pour authentification, rate limiting, logging des requêtes et gestion centralisée des erreurs' },
+  { cat: 'code', title: 'Regex patterns', desc: 'Expressions régulières utiles', prefill: 'Des expressions régulières pour valider email, téléphone, URL, mot de passe fort, avec explications et tests' },
+  { cat: 'code', title: 'CLI tool', desc: 'Outil en ligne de commande', prefill: 'Un outil CLI en Node.js/Python avec arguments parsés, aide intégrée, couleurs, barre de progression et fichier de config' },
+  { cat: 'code', title: 'Web scraper', desc: 'Extraction de données web', prefill: 'Un web scraper Python avec Beautiful Soup/Playwright, gestion de pagination, rate limiting, export CSV et gestion des erreurs' },
+  { cat: 'code', title: 'Hook React custom', desc: 'Hook réutilisable', prefill: 'Un hook React personnalisé avec gestion d\'état, cleanup, dépendances et TypeScript pour un cas d\'usage spécifique' },
+  { cat: 'code', title: 'Docker Compose', desc: 'Stack multi-services', prefill: 'Un docker-compose.yml pour une stack complète : app, base de données, cache Redis, reverse proxy Nginx, volumes persistants' },
+  { cat: 'code', title: 'Algorithme de tri', desc: 'Implémenter un algo classique', prefill: 'Implémenter un algorithme de tri optimisé avec analyse de complexité, commentaires explicatifs et comparaison des approches' },
+  { cat: 'code', title: 'Auth OAuth2/OIDC', desc: 'Authentification sécurisée', prefill: 'Implémenter un flux OAuth2 complet avec PKCE, refresh token, stockage sécurisé et gestion des sessions' },
+  { cat: 'code', title: 'Animation CSS', desc: 'Transitions et keyframes', prefill: 'Des animations CSS avancées avec keyframes, transitions, transforms, préférence de mouvement réduit et performances GPU' },
+  { cat: 'code', title: 'GraphQL schema', desc: 'Schéma et resolvers', prefill: 'Un schéma GraphQL avec types, queries, mutations, subscriptions, resolvers et gestion des erreurs typées' },
+  { cat: 'code', title: 'Cron job robuste', desc: 'Tâche planifiée fiable', prefill: 'Un cron job Node.js/Python avec retry, dead letter queue, logging, alertes en cas d\'échec et idempotence' },
+  { cat: 'code', title: 'Formulaire avancé', desc: 'Validation temps réel', prefill: 'Un formulaire multi-étapes avec validation temps réel, messages d\'erreur contextuels, auto-save et accessibilité WCAG' },
+  { cat: 'code', title: 'Migration de BDD', desc: 'Script de migration sûr', prefill: 'Un script de migration de base de données avec rollback, vérification pré/post migration, backup et zero-downtime' },
+  { cat: 'code', title: 'API rate limiter', desc: 'Limitation de requêtes', prefill: 'Un rate limiter avec algorithme sliding window, stockage Redis, headers standards, whitelist et réponses 429 correctes' },
+  { cat: 'code', title: 'State machine', desc: 'Machine à états finis', prefill: 'Une machine à états finis pour gérer un workflow complexe avec transitions, guards, actions et persistance' },
+  { cat: 'code', title: 'Responsive layout', desc: 'Grille CSS adaptative', prefill: 'Un layout CSS responsive avec Grid et Flexbox, breakpoints mobiles, sidebar collapsible et navigation adaptive' },
+  { cat: 'code', title: 'Logger structuré', desc: 'Système de logs applicatif', prefill: 'Un logger structuré avec niveaux, contexte, rotation des fichiers, format JSON pour agrégation et corrélation de traces' },
+  { cat: 'code', title: 'PWA setup', desc: 'Progressive Web App', prefill: 'Transformer un site en PWA avec service worker, manifest, cache offline, push notifications et installation prompt' },
+  { cat: 'code', title: 'Connexion BDD', desc: 'Pool de connexions optimisé', prefill: 'Un module de connexion base de données avec pool, reconnexion automatique, health check et gestion propre de la fermeture' },
+  { cat: 'code', title: 'Parser de fichier', desc: 'Lire CSV/JSON/XML', prefill: 'Un parser de fichiers robuste qui gère CSV, JSON et XML avec streaming pour gros fichiers, validation et mapping de colonnes' },
+  { cat: 'code', title: 'Chatbot framework', desc: 'Base de chatbot conversationnel', prefill: 'Un framework de chatbot avec gestion de contexte, intents, entities, fallback et intégration API externe' },
+  { cat: 'code', title: 'Tests E2E Playwright', desc: 'Tests bout en bout', prefill: 'Des tests end-to-end avec Playwright couvrant les parcours utilisateurs critiques avec fixtures, screenshots et rapports' },
+  { cat: 'code', title: 'Système de cache', desc: 'Cache multi-niveaux', prefill: 'Un système de cache multi-niveaux (mémoire + Redis) avec invalidation, TTL, cache stampede protection et métriques' },
+  { cat: 'code', title: 'Upload de fichiers', desc: 'Upload sécurisé et optimisé', prefill: 'Un système d\'upload de fichiers avec validation type/taille, chunked upload, barre de progression, compression et stockage S3' },
+  { cat: 'code', title: 'Email transactionnel', desc: 'Envoi d\'emails avec template', prefill: 'Un service d\'envoi d\'emails avec templates HTML responsive, variables dynamiques, queue, retry et tracking d\'ouverture' },
+  { cat: 'code', title: 'Tableau de bord admin', desc: 'Dashboard avec graphiques', prefill: 'Un dashboard admin avec graphiques interactifs, tableaux triables/filtrables, KPIs en temps réel et export de données' },
+  { cat: 'code', title: 'Système de permissions', desc: 'RBAC granulaire', prefill: 'Un système RBAC avec rôles, permissions granulaires, héritage de rôles, middleware de vérification et interface d\'admin' },
+  { cat: 'code', title: 'Recherche full-text', desc: 'Moteur de recherche interne', prefill: 'Un moteur de recherche full-text avec tokenization, stemming, fuzzy matching, facettes, suggestions et highlighting' },
+  { cat: 'code', title: 'Webhook handler', desc: 'Réception et traitement', prefill: 'Un handler de webhooks avec vérification de signature, queue de traitement, retry, idempotence et logging' },
+  { cat: 'code', title: 'Config management', desc: 'Gestion de configuration', prefill: 'Un système de configuration avec variables d\'env, fichiers .env, validation de schéma, valeurs par défaut et typing' },
+  { cat: 'code', title: 'Error boundary React', desc: 'Gestion d\'erreurs UI', prefill: 'Un error boundary React avec fallback UI, logging, retry automatique, rapports d\'erreur et messages utilisateur' },
+  { cat: 'code', title: 'Pagination API', desc: 'Cursor-based pagination', prefill: 'Une pagination cursor-based pour API REST avec tri, filtrage, metadata, liens next/prev et performance optimisée' },
+  { cat: 'code', title: 'Système de notifications', desc: 'Notifications multi-canal', prefill: 'Un système de notifications multi-canal (in-app, email, push) avec préférences utilisateur, batching et templates' },
+  { cat: 'code', title: 'Dark mode toggle', desc: 'Thème clair/sombre', prefill: 'Un système de dark mode complet avec CSS custom properties, détection système, persistance et transition fluide' },
+  { cat: 'code', title: 'Monitoring et alertes', desc: 'Health checks et métriques', prefill: 'Un système de monitoring avec health checks, métriques custom, seuils d\'alerte, dashboard et intégration Slack/PagerDuty' },
+  { cat: 'code', title: 'Feature flags', desc: 'Activation progressive', prefill: 'Un système de feature flags avec activation par utilisateur/pourcentage, A/B testing, dashboard d\'admin et SDK client' },
+  { cat: 'code', title: 'Data validation', desc: 'Schéma de validation robuste', prefill: 'Un schéma de validation de données avec Zod/Joi, types custom, messages d\'erreur localisés et validation asynchrone' },
+  { cat: 'code', title: 'SSE streaming', desc: 'Server-Sent Events', prefill: 'Un endpoint SSE pour streaming de données en temps réel avec reconnexion, event types, buffering et gestion de backpressure' },
+  { cat: 'code', title: 'Extension VS Code', desc: 'Plugin pour l\'éditeur', prefill: 'Une extension VS Code avec commandes, vues personnalisées, snippets, diagnostics et configuration par workspace' },
+
+  // ── GENERAL (50) ──
+  { cat: 'general', title: 'Comparatif décisionnel', desc: 'Comparer des options pour décider', prefill: 'Comparer plusieurs options avec avantages, inconvénients, coûts, risques et recommandation argumentée sous forme de tableau' },
+  { cat: 'general', title: 'Plan d\'action', desc: 'Structurer un projet', prefill: 'Structurer un plan d\'action détaillé avec objectifs SMART, jalons, responsabilités, échéances et indicateurs de succès' },
+  { cat: 'general', title: 'Brainstorming', desc: 'Idées créatives sur un sujet', prefill: 'Générer 20 idées créatives et originales sur un sujet donné, classées par faisabilité et impact potentiel' },
+  { cat: 'general', title: 'Synthèse de document', desc: 'Résumer en points clés', prefill: 'Résumer un long document en points clés avec les informations essentielles, conclusions et actions recommandées' },
+  { cat: 'general', title: 'Checklist complète', desc: 'Liste de vérification exhaustive', prefill: 'Créer une checklist exhaustive et catégorisée pour un projet ou événement, avec priorités et statuts à cocher' },
+  { cat: 'general', title: 'Analyse de risques', desc: 'Identifier et évaluer les risques', prefill: 'Identifier les risques d\'un projet avec probabilité, impact, stratégies de mitigation et plan de contingence' },
+  { cat: 'general', title: 'Lettre de motivation', desc: 'Candidature personnalisée', prefill: 'Rédiger une lettre de motivation percutante et personnalisée pour un poste spécifique en valorisant les compétences clés' },
+  { cat: 'general', title: 'Business model canvas', desc: 'Modèle économique structuré', prefill: 'Compléter un Business Model Canvas avec les 9 blocs : segments clients, proposition de valeur, canaux, revenus...' },
+  { cat: 'general', title: 'Analyse de marché', desc: 'Étude sectorielle', prefill: 'Réaliser une analyse de marché avec taille, tendances, segments, concurrents, opportunités et menaces' },
+  { cat: 'general', title: 'Guide d\'entretien', desc: 'Grille de questions structurée', prefill: 'Créer un guide d\'entretien semi-directif avec questions ouvertes, relances et grille d\'évaluation pour un recrutement' },
+  { cat: 'general', title: 'OKR trimestriels', desc: 'Objectifs et résultats clés', prefill: 'Définir des OKR trimestriels avec objectifs ambitieux, résultats clés mesurables et initiatives associées' },
+  { cat: 'general', title: 'Rapport d\'activité', desc: 'Bilan périodique structuré', prefill: 'Rédiger un rapport d\'activité structuré avec réalisations, KPIs, difficultés rencontrées et perspectives' },
+  { cat: 'general', title: 'Cahier des charges', desc: 'Spécifications d\'un projet', prefill: 'Rédiger un cahier des charges complet avec contexte, objectifs, fonctionnalités, contraintes techniques et planning' },
+  { cat: 'general', title: 'Pitch elevator', desc: 'Présentation en 30 secondes', prefill: 'Formuler un elevator pitch percutant en 30 secondes pour présenter un projet, produit ou idée à un investisseur' },
+  { cat: 'general', title: 'Processus onboarding', desc: 'Intégration nouveau collaborateur', prefill: 'Créer un processus d\'onboarding semaine par semaine pour un nouveau collaborateur avec formations, rencontres et livrables' },
+  { cat: 'general', title: 'Stratégie de contenu', desc: 'Calendrier éditorial', prefill: 'Élaborer une stratégie de contenu avec personas, thématiques, calendrier éditorial mensuel et KPIs de performance' },
+  { cat: 'general', title: 'Rétrospective d\'équipe', desc: 'Bilan et améliorations', prefill: 'Animer une rétrospective d\'équipe avec ce qui a bien marché, les points d\'amélioration et les actions concrètes' },
+  { cat: 'general', title: 'Plan de communication', desc: 'Stratégie de diffusion', prefill: 'Élaborer un plan de communication avec messages clés, canaux, cibles, planning et budget pour un lancement' },
+  { cat: 'general', title: 'Grille d\'évaluation', desc: 'Critères de notation objectifs', prefill: 'Créer une grille d\'évaluation avec critères pondérés, niveaux de performance et descripteurs pour chaque niveau' },
+  { cat: 'general', title: 'Matrice de priorisation', desc: 'Classer par impact et effort', prefill: 'Classer une liste de tâches/projets dans une matrice impact/effort avec recommandations de priorisation' },
+  { cat: 'general', title: 'Plan de formation', desc: 'Parcours d\'apprentissage', prefill: 'Concevoir un plan de formation personnalisé avec objectifs, ressources, exercices pratiques et jalons de progression' },
+  { cat: 'general', title: 'Analyse concurrentielle', desc: 'Benchmark des concurrents', prefill: 'Analyser les forces et faiblesses de concurrents avec positionnement, pricing, fonctionnalités et parts de marché' },
+  { cat: 'general', title: 'Template d\'email froid', desc: 'Prospection par email', prefill: 'Rédiger une séquence de 3 emails de prospection à froid avec personnalisation, valeur ajoutée et CTA progressifs' },
+  { cat: 'general', title: 'Compte-rendu projet', desc: 'Point d\'avancement', prefill: 'Rédiger un compte-rendu de projet avec avancement par chantier, feux tricolores, risques identifiés et prochaines étapes' },
+  { cat: 'general', title: 'Plan de migration', desc: 'Transition d\'un système à un autre', prefill: 'Planifier une migration de système avec phases, rollback plan, communication, tests de validation et critères de succès' },
+  { cat: 'general', title: 'Fiche de poste', desc: 'Description de poste complète', prefill: 'Rédiger une fiche de poste attractive avec missions, compétences requises, avantages et culture d\'entreprise' },
+  { cat: 'general', title: 'Protocole de test', desc: 'Plan de test structuré', prefill: 'Créer un protocole de test utilisateur avec scénarios, tâches, métriques, grille d\'observation et rapport type' },
+  { cat: 'general', title: 'Charte d\'équipe', desc: 'Règles de fonctionnement', prefill: 'Rédiger une charte d\'équipe avec valeurs, modes de communication, processus de décision et gestion des conflits' },
+  { cat: 'general', title: 'Plan budgétaire', desc: 'Budget prévisionnel détaillé', prefill: 'Créer un budget prévisionnel avec postes de dépenses, revenus estimés, hypothèses et scénarios optimiste/pessimiste' },
+  { cat: 'general', title: 'Guide de style', desc: 'Charte graphique et rédactionnelle', prefill: 'Créer un guide de style avec ton de voix, vocabulaire, do/don\'t, exemples de formulations et règles de mise en forme' },
+  { cat: 'general', title: 'Procédure d\'urgence', desc: 'Plan de gestion de crise', prefill: 'Rédiger une procédure de gestion de crise avec niveaux de sévérité, chaîne d\'escalade, communication et post-mortem' },
+  { cat: 'general', title: 'Étude de faisabilité', desc: 'Viabilité d\'un projet', prefill: 'Réaliser une étude de faisabilité avec analyse technique, économique, organisationnelle et recommandation go/no-go' },
+  { cat: 'general', title: 'Matrice RACI', desc: 'Rôles et responsabilités', prefill: 'Construire une matrice RACI pour un projet avec responsables, approbateurs, consultés et informés par livrable' },
+  { cat: 'general', title: 'Plan de lancement', desc: 'Go-to-market structuré', prefill: 'Planifier un lancement produit avec phases pré-launch, launch day et post-launch, canaux, métriques et contingences' },
+  { cat: 'general', title: 'Sondage de satisfaction', desc: 'Enquête client/collaborateur', prefill: 'Concevoir un sondage de satisfaction avec questions NPS, échelles de Likert, questions ouvertes et analyse type' },
+  { cat: 'general', title: 'Présentation client', desc: 'Deck commercial structuré', prefill: 'Structurer une présentation commerciale avec accroche, problème client, solution, preuves sociales et appel à l\'action' },
+  { cat: 'general', title: 'Plan de recrutement', desc: 'Stratégie d\'embauche', prefill: 'Élaborer un plan de recrutement avec sourcing, processus d\'entretien, grille d\'évaluation et timeline par poste' },
+  { cat: 'general', title: 'Analyse des parties prenantes', desc: 'Cartographie des acteurs', prefill: 'Cartographier les parties prenantes d\'un projet avec niveau d\'influence, intérêt, stratégie d\'engagement et risques' },
+  { cat: 'general', title: 'Template de rapport', desc: 'Structure de document type', prefill: 'Créer un template de rapport professionnel avec page de garde, sommaire, résumé exécutif, sections et annexes' },
+  { cat: 'general', title: 'Plan de continuité', desc: 'PCA/PRA pour activité critique', prefill: 'Rédiger un plan de continuité d\'activité avec scénarios de risque, solutions de repli, RTO/RPO et procédures d\'activation' },
+  { cat: 'general', title: 'Benchmark outil', desc: 'Comparer des logiciels/outils', prefill: 'Comparer des outils/logiciels avec critères fonctionnels, techniques, pricing, support et verdict avec scoring' },
+  { cat: 'general', title: 'Parcours utilisateur', desc: 'User journey mapping', prefill: 'Cartographier un parcours utilisateur complet avec étapes, émotions, points de friction, opportunités et quick wins' },
+  { cat: 'general', title: 'Proposition commerciale', desc: 'Offre structurée et convaincante', prefill: 'Rédiger une proposition commerciale avec contexte, compréhension du besoin, solution, livrables, planning et tarification' },
+  { cat: 'general', title: 'Post-mortem incident', desc: 'Analyse après incident', prefill: 'Rédiger un post-mortem d\'incident avec timeline, cause racine, impact, actions correctives et mesures préventives' },
+  { cat: 'general', title: 'Argumentaire de vente', desc: 'Pitch structuré par objection', prefill: 'Construire un argumentaire de vente avec bénéfices clés, preuves, réponses aux objections courantes et closes' },
+  { cat: 'general', title: 'KPIs et dashboard', desc: 'Indicateurs de performance', prefill: 'Définir les KPIs pertinents pour un projet/équipe avec formules de calcul, cibles, fréquence de mesure et alertes' },
+  { cat: 'general', title: 'Politique de télétravail', desc: 'Cadre et règles remote', prefill: 'Rédiger une politique de télétravail avec éligibilité, jours autorisés, équipement, communication et évaluation' },
+  { cat: 'general', title: 'Dossier de financement', desc: 'Demande de fonds structurée', prefill: 'Préparer un dossier de financement avec executive summary, problème, solution, marché, modèle économique et projections' },
+  { cat: 'general', title: 'Guide utilisateur', desc: 'Documentation produit', prefill: 'Rédiger un guide utilisateur avec prise en main, fonctionnalités principales, FAQ, troubleshooting et glossaire' },
+  { cat: 'general', title: 'Feedback 360°', desc: 'Évaluation multi-sources', prefill: 'Concevoir un questionnaire de feedback 360° avec compétences évaluées, échelles, questions ouvertes et guide de restitution' },
 ];
 
 // ══════════════════════════════════════
@@ -1041,30 +1231,33 @@ document.querySelectorAll('.cat-chip').forEach(chip => {
 function renderInspirations() {
   const grid = document.getElementById('inspoGrid');
   const catLabels = { image: 'Image', llm: 'LLM', code: 'Code', general: 'Général' };
-  const filtered = selectedCategory === 'general'
-    ? INSPIRATIONS
-    : INSPIRATIONS.filter(i => i.cat === selectedCategory);
+  const filtered = INSPIRATIONS.filter(i => i.cat === selectedCategory);
 
-  grid.innerHTML = filtered.map(i => `
-    <div class="inspo-card" onclick="useInspiration('${i.title}', '${i.cat}')">
-      <span class="inspo-badge ${i.cat}">${catLabels[i.cat]}</span>
-      <h4>${i.title}</h4>
-      <p>${i.desc}</p>
+  grid.innerHTML = filtered.map((item, idx) => `
+    <div class="inspo-card" onclick="useInspiration(${idx})">
+      <span class="inspo-badge ${item.cat}">${catLabels[item.cat]}</span>
+      <h4>${item.title}</h4>
+      <p>${item.desc}</p>
     </div>
   `).join('');
+  // Store filtered list for click handler
+  window._filteredInspo = filtered;
 }
 
-function useInspiration(title, cat) {
+function useInspiration(idx) {
+  const item = window._filteredInspo[idx];
+  if (!item) return;
+
   // Set category
-  selectedCategory = cat;
+  selectedCategory = item.cat;
   document.querySelectorAll('.cat-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.cat === cat);
+    c.classList.toggle('active', c.dataset.cat === item.cat);
   });
   renderInspirations();
 
-  // Fill input
+  // Fill input with prefill text
   const input = document.getElementById('userInput');
-  input.value = title + ' — ';
+  input.value = item.prefill || item.title;
   input.focus();
   input.selectionStart = input.selectionEnd = input.value.length;
   updateCharCount();
