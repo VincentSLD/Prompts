@@ -785,6 +785,7 @@ main {
     <div class="input-footer">
       <span class="char-count" id="charCount">0 caractères</span>
       <div class="input-btns">
+        <button class="btn" onclick="clearInput()">Effacer</button>
         <button class="btn suggest-btn" id="suggestBtn" onclick="suggest()">💡 Suggestions</button>
         <button class="generate-btn" id="generateBtn" onclick="generate()">
           ✦ Générer le prompt
@@ -1283,6 +1284,16 @@ function updateCharCount() {
   document.getElementById('charCount').textContent = `${n} caractère${n > 1 ? 's' : ''}`;
 }
 document.getElementById('userInput').addEventListener('input', updateCharCount);
+
+// ══════════════════════════════════════
+// CLEAR INPUT
+// ══════════════════════════════════════
+function clearInput() {
+  document.getElementById('userInput').value = '';
+  updateCharCount();
+  document.getElementById('suggestSection').classList.remove('visible');
+  document.getElementById('resultSection').classList.remove('visible');
+}
 
 // ══════════════════════════════════════
 // SUGGESTIONS
