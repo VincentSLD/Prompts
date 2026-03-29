@@ -32,6 +32,35 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+.ai-btn {
+  background: linear-gradient(135deg, var(--purple), var(--blue)) !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.ai-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.35);
+}
+.ai-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.ai-btn.loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
@@ -804,6 +833,7 @@ main {
           <h3>Aperçu du prompt</h3>
           <div class="preview-content" id="builderPreview"></div>
           <div class="preview-actions">
+            <button class="btn ai-btn" onclick="improvePrompt('builderPreview')">✨ Améliorer avec l'IA</button>
             <button class="btn primary" onclick="copyPrompt('builderPreview')">📋 Copier</button>
             <button class="btn" onclick="downloadPrompt('builderPreview', 'prompt-studio')">💾 Télécharger .txt</button>
             <button class="btn" onclick="downloadPromptMD('builderPreview', 'prompt-studio')">📄 Télécharger .md</button>
@@ -847,6 +877,7 @@ main {
   <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
     <span style="font-size:0.8rem; color:var(--text3);" id="charCount">0 caractères</span>
     <div class="preview-actions">
+      <button class="btn ai-btn" onclick="improvePrompt('freeformArea')">✨ Améliorer avec l'IA</button>
       <button class="btn" onclick="document.getElementById('freeformArea').value=''; updateCharCount();">🗑️ Effacer</button>
       <button class="btn primary" onclick="copyFreeform()">📋 Copier</button>
       <button class="btn" onclick="downloadFreeform()">💾 Télécharger .txt</button>
@@ -1382,6 +1413,42 @@ function downloadPromptMD(id, name) {
   a.href = URL.createObjectURL(blob);
   a.download = `${name}-${Date.now()}.md`;
   a.click();
+}
+
+async function improvePrompt(sourceId) {
+  const el = document.getElementById(sourceId);
+  const text = el.tagName === 'TEXTAREA' ? el.value : el.textContent;
+  if (!text.trim()) { showToast('Écrivez un prompt d\'abord !'); return; }
+
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = '⏳ Amélioration en cours...';
+
+  try {
+    const res = await fetch('/api/improve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: text })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erreur API');
+
+    if (el.tagName === 'TEXTAREA') {
+      el.value = data.improved;
+      updateCharCount();
+    } else {
+      el.textContent = data.improved;
+    }
+    showToast('Prompt amélioré par l\'IA !');
+  } catch (err) {
+    showToast('Erreur : ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = originalText;
+  }
 }
 
 function downloadFreeform() {
