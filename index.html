@@ -428,6 +428,176 @@ main {
   animation: shimmer 1.2s infinite;
 }
 
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.nav-tab {
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-tab:hover { color: var(--text); background: var(--bg4); }
+.nav-tab.active {
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(167,139,250,0.3);
+}
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── BUILDER ── */
+.builder-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+
+.builder-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 2rem;
+}
+
+.progress-dot {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg4);
+  transition: background 0.3s;
+}
+
+.progress-dot.active { background: var(--accent); }
+.progress-dot.done { background: var(--green); }
+
+.b-step { display: none; }
+.b-step.active { display: block; animation: fadeIn 0.3s ease; }
+
+.b-step h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.b-step-desc {
+  color: var(--text2);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus { border-color: var(--accent); }
+
+.form-group textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.form-group select { cursor: pointer; }
+.form-group select option { background: var(--bg3); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.chip:hover { border-color: var(--text3); color: var(--text); }
+.chip.selected { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+
+.range-row { display: flex; align-items: center; gap: 12px; }
+
+.range-row input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--bg4);
+  border-radius: 3px;
+  border: none;
+  padding: 0;
+}
+
+.range-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.range-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  min-width: 80px;
+  text-align: right;
+}
+
+.builder-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
 /* ── TOAST ── */
 .toast {
   position: fixed;
@@ -458,6 +628,8 @@ main {
   .result-section { padding: 1rem; }
   .inspo-grid { grid-template-columns: 1fr; }
   .generate-btn { width: 100%; justify-content: center; }
+  .builder-card { padding: 1.25rem; }
+  .nav-tabs { font-size: 0.75rem; }
 }
 
 /* ── SCROLLBAR ── */
@@ -487,13 +659,19 @@ main {
       <div class="logo-icon">»</div>
       <span class="logo-text">Prompt Studio</span>
     </div>
-    <span class="header-badge">Propulsé par Claude</span>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-view="generator">✦ Générateur</button>
+      <button class="nav-tab" data-view="builder">🔧 Constructeur</button>
+    </nav>
   </div>
 </header>
 
 <div class="toast" id="toast"></div>
 
 <main>
+
+<!-- ═══════════ GENERATOR VIEW ═══════════ -->
+<div class="view active" id="view-generator">
 
   <!-- HERO -->
   <div class="hero">
@@ -539,9 +717,180 @@ main {
     </div>
   </div>
 
+</div><!-- /view-generator -->
+
+<!-- ═══════════ BUILDER VIEW ═══════════ -->
+<div class="view" id="view-builder">
+  <div class="hero">
+    <h1>Construisez <span class="ai-gradient">étape par étape</span></h1>
+    <p>Remplissez chaque étape, l'IA finalise votre prompt.</p>
+  </div>
+
+  <div class="builder-card">
+    <!-- Progress -->
+    <div class="builder-progress" id="builderProgress"></div>
+
+    <!-- Step 1: Type -->
+    <div class="b-step active" data-step="0">
+      <h2>Type de prompt</h2>
+      <p class="b-step-desc">Choisissez le type de prompt à créer.</p>
+      <div class="chips" id="typeChips">
+        <div class="chip" data-val="image">🎨 Image</div>
+        <div class="chip" data-val="llm">🤖 LLM / Chat</div>
+        <div class="chip" data-val="code">💻 Code</div>
+        <div class="chip" data-val="general">🌐 Général</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Sujet -->
+    <div class="b-step" data-step="1">
+      <h2>Sujet & Contexte</h2>
+      <p class="b-step-desc">Décrivez le sujet et l'objectif.</p>
+      <div class="form-group">
+        <label>Sujet principal</label>
+        <input type="text" id="bSubject" placeholder="Ex: Portrait photoréaliste, Analyse de données, API REST...">
+      </div>
+      <div class="form-group">
+        <label>Contexte / Objectif</label>
+        <textarea id="bContext" placeholder="Décrivez l'objectif, le contexte, le résultat attendu..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Public cible</label>
+        <input type="text" id="bAudience" placeholder="Ex: Développeurs, clients B2B, usage personnel...">
+      </div>
+    </div>
+
+    <!-- Step 3: Rôle & Ton -->
+    <div class="b-step" data-step="2">
+      <h2>Rôle & Tonalité</h2>
+      <p class="b-step-desc">Définissez la personnalité et le style.</p>
+      <div class="form-group">
+        <label>Rôle / Persona</label>
+        <input type="text" id="bRole" placeholder="Ex: Expert UX, Chef cuisinier, Rédacteur technique...">
+      </div>
+      <div class="form-group">
+        <label>Ton</label>
+        <div class="chips" id="toneChips">
+          <div class="chip" data-val="professionnel">Professionnel</div>
+          <div class="chip" data-val="créatif">Créatif</div>
+          <div class="chip" data-val="académique">Académique</div>
+          <div class="chip" data-val="conversationnel">Conversationnel</div>
+          <div class="chip" data-val="technique">Technique</div>
+          <div class="chip" data-val="pédagogique">Pédagogique</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Langue</label>
+        <select id="bLang">
+          <option value="français">Français</option>
+          <option value="anglais">Anglais</option>
+          <option value="espagnol">Espagnol</option>
+          <option value="bilingue FR/EN">Bilingue FR/EN</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Step 4: Détails -->
+    <div class="b-step" data-step="3">
+      <h2>Détails & Contraintes</h2>
+      <p class="b-step-desc">Affinez les paramètres.</p>
+      <div class="form-group">
+        <label>Format de sortie</label>
+        <div class="chips" id="formatChips">
+          <div class="chip" data-val="texte libre">Texte libre</div>
+          <div class="chip" data-val="liste à puces">Liste à puces</div>
+          <div class="chip" data-val="tableau">Tableau</div>
+          <div class="chip" data-val="JSON">JSON</div>
+          <div class="chip" data-val="Markdown">Markdown</div>
+          <div class="chip" data-val="code">Code</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Longueur</label>
+        <div class="range-row">
+          <input type="range" id="bLength" min="1" max="5" value="3">
+          <span class="range-val" id="bLengthVal">Moyen</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Contraintes</label>
+        <textarea id="bConstraints" placeholder="Ce qu'il faut éviter, limites, règles..."></textarea>
+      </div>
+    </div>
+
+    <!-- Step 5: Image params (conditional) -->
+    <div class="b-step" data-step="4">
+      <h2>🎨 Paramètres Image</h2>
+      <p class="b-step-desc">Options pour la génération d'images.</p>
+      <div class="form-group">
+        <label>Style artistique</label>
+        <div class="chips" id="artChips">
+          <div class="chip" data-val="photoréaliste">Photoréaliste</div>
+          <div class="chip" data-val="illustration">Illustration</div>
+          <div class="chip" data-val="peinture à l'huile">Peinture à l'huile</div>
+          <div class="chip" data-val="aquarelle">Aquarelle</div>
+          <div class="chip" data-val="3D render">3D Render</div>
+          <div class="chip" data-val="pixel art">Pixel Art</div>
+          <div class="chip" data-val="anime">Anime</div>
+          <div class="chip" data-val="minimaliste">Minimaliste</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Éclairage</label>
+        <div class="chips" id="lightChips">
+          <div class="chip" data-val="naturel">Naturel</div>
+          <div class="chip" data-val="studio">Studio</div>
+          <div class="chip" data-val="golden hour">Golden hour</div>
+          <div class="chip" data-val="néon">Néon</div>
+          <div class="chip" data-val="dramatique">Dramatique</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Ratio</label>
+        <select id="bRatio">
+          <option value="--ar 1:1">1:1 (Carré)</option>
+          <option value="--ar 16:9">16:9 (Paysage)</option>
+          <option value="--ar 9:16">9:16 (Portrait)</option>
+          <option value="--ar 4:3">4:3</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Step 6: Result -->
+    <div class="b-step" data-step="5">
+      <h2>Votre prompt</h2>
+      <p class="b-step-desc">Voici votre prompt. Améliorez-le avec l'IA ou copiez-le directement.</p>
+      <div class="result-content" id="builderResult" style="margin-bottom:1rem;"></div>
+      <div class="result-actions">
+        <button class="btn ai" onclick="improveBuilder()">✦ Améliorer avec l'IA</button>
+        <button class="btn primary" onclick="copyBuilder()">Copier</button>
+        <button class="btn" onclick="downloadBuilder()">Télécharger .txt</button>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="builder-nav">
+      <button class="btn" id="btnPrev" onclick="builderNav(-1)" style="visibility:hidden;">← Précédent</button>
+      <button class="btn primary" id="btnNext" onclick="builderNav(1)">Suivant →</button>
+    </div>
+  </div>
+</div><!-- /view-builder -->
+
 </main>
 
 <script>
+// ══════════════════════════════════════
+// NAV TABS
+// ══════════════════════════════════════
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+  });
+});
+
 // ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
@@ -750,6 +1099,168 @@ function showToast(msg, isError = false) {
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2500);
 }
+
+// ══════════════════════════════════════
+// BUILDER
+// ══════════════════════════════════════
+const TOTAL_STEPS = 6;
+let bStep = 0;
+let bData = { type: '', tones: [], formats: [], artStyles: [], lights: [] };
+
+function renderProgress() {
+  const bar = document.getElementById('builderProgress');
+  const total = bData.type === 'image' ? TOTAL_STEPS : TOTAL_STEPS - 1;
+  let dots = '';
+  for (let i = 0; i < total; i++) {
+    const realI = (i >= 4 && bData.type !== 'image') ? i + 1 : i;
+    const cls = realI < bStep ? 'done' : (realI === bStep ? 'active' : '');
+    dots += `<div class="progress-dot ${cls}"></div>`;
+  }
+  bar.innerHTML = dots;
+}
+
+function goStep(n) {
+  if (n === 4 && bData.type !== 'image') n = bStep < 4 ? 5 : 3;
+  if (n < 0) n = 0;
+  if (n > 5) n = 5;
+  bStep = n;
+  document.querySelectorAll('.b-step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.b-step[data-step="${n}"]`).classList.add('active');
+  document.getElementById('btnPrev').style.visibility = n === 0 ? 'hidden' : 'visible';
+
+  const lastInput = bData.type === 'image' ? 4 : 3;
+  if (n === lastInput) {
+    document.getElementById('btnNext').textContent = '✦ Générer le prompt →';
+  } else if (n >= 5) {
+    document.getElementById('btnNext').textContent = '✓ Terminé';
+  } else {
+    document.getElementById('btnNext').textContent = 'Suivant →';
+  }
+
+  if (n === 5) generateBuilderPrompt();
+  renderProgress();
+}
+
+function builderNav(dir) {
+  let next = bStep + dir;
+  if (next === 4 && bData.type !== 'image') next += dir;
+  if (next < 0 || next > 5) return;
+  goStep(next);
+}
+
+// Chips
+function setupBuilderChips(id, key, multi = false) {
+  document.querySelectorAll(`#${id} .chip`).forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (multi) {
+        chip.classList.toggle('selected');
+        bData[key] = [...document.querySelectorAll(`#${id} .chip.selected`)].map(c => c.dataset.val);
+      } else {
+        document.querySelectorAll(`#${id} .chip`).forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        bData[key] = chip.dataset.val;
+      }
+    });
+  });
+}
+
+setupBuilderChips('typeChips', 'type');
+setupBuilderChips('toneChips', 'tones', true);
+setupBuilderChips('formatChips', 'formats', true);
+setupBuilderChips('artChips', 'artStyles', true);
+setupBuilderChips('lightChips', 'lights', true);
+
+// Length slider
+const lengthLabels = ['Très court', 'Court', 'Moyen', 'Long', 'Très long'];
+document.getElementById('bLength').addEventListener('input', e => {
+  document.getElementById('bLengthVal').textContent = lengthLabels[e.target.value - 1];
+});
+
+// Generate builder prompt
+function generateBuilderPrompt() {
+  const subject = document.getElementById('bSubject').value || '[SUJET]';
+  const context = document.getElementById('bContext').value;
+  const audience = document.getElementById('bAudience').value;
+  const role = document.getElementById('bRole').value;
+  const tones = bData.tones;
+  const lang = document.getElementById('bLang').value;
+  const formats = bData.formats;
+  const length = lengthLabels[document.getElementById('bLength').value - 1];
+  const constraints = document.getElementById('bConstraints').value;
+
+  let prompt = '';
+
+  if (bData.type === 'image') {
+    const styles = bData.artStyles;
+    const lights = bData.lights;
+    const ratio = document.getElementById('bRatio').value;
+    prompt = subject;
+    if (styles.length) prompt += `, style ${styles.join(', ')}`;
+    if (lights.length) prompt += `, éclairage ${lights.join(' et ')}`;
+    if (context) prompt += `, ${context}`;
+    prompt += `, ${length === 'Très court' ? 'composition simple' : length === 'Très long' ? 'ultra détaillé, 8K' : 'détails soignés'}`;
+    prompt += ` ${ratio}`;
+  } else {
+    if (role) prompt += `Tu es ${role}.\n\n`;
+    if (context) prompt += `Contexte : ${context}\n\n`;
+    prompt += `Tâche : ${subject}\n`;
+    if (audience) prompt += `\nPublic cible : ${audience}\n`;
+    if (tones.length) prompt += `Ton : ${tones.join(', ')}\n`;
+    if (lang !== 'français') prompt += `Langue : ${lang}\n`;
+    if (formats.length) prompt += `Format : ${formats.join(', ')}\n`;
+    prompt += `Longueur : ${length}\n`;
+    if (constraints) prompt += `\nContraintes :\n${constraints}\n`;
+  }
+
+  document.getElementById('builderResult').textContent = prompt.trim();
+}
+
+// Builder AI improve
+async function improveBuilder() {
+  const el = document.getElementById('builderResult');
+  const text = el.textContent.trim();
+  if (!text) return;
+
+  const btn = event.target.closest('.btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  const original = btn.innerHTML;
+  btn.innerHTML = '⏳ Amélioration...';
+
+  try {
+    const res = await fetch('/api/improve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: text })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erreur API');
+    el.textContent = data.improved;
+    showToast('Prompt amélioré par l\'IA !');
+  } catch (err) {
+    showToast('Erreur : ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.innerHTML = original;
+  }
+}
+
+function copyBuilder() {
+  navigator.clipboard.writeText(document.getElementById('builderResult').textContent)
+    .then(() => showToast('Copié !'));
+}
+
+function downloadBuilder() {
+  const text = document.getElementById('builderResult').textContent;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `prompt-builder-${Date.now()}.txt`;
+  a.click();
+}
+
+renderProgress();
 </script>
 </body>
 </html>
