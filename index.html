@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Studio — Atelier de Prompts</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0e13;
+  --bg2: #13161d;
+  --bg3: #1a1e28;
+  --bg4: #222733;
+  --border: #2a2f3d;
+  --border-hover: #3d4459;
+  --text: #e4e7ef;
+  --text2: #9ba1b5;
+  --text3: #6b7188;
+  --accent: #f59e0b;
+  --accent2: #fbbf24;
+  --accent-glow: rgba(245, 158, 11, 0.15);
+  --accent-glow2: rgba(245, 158, 11, 0.06);
+  --green: #34d399;
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --red: #f87171;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(245,158,11,0.04), transparent),
+    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(96,165,250,0.03), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(12, 14, 19, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), #d97706);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  box-shadow: 0 2px 12px rgba(245,158,11,0.3);
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 1.35rem;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.logo-tag {
+  font-size: 0.7rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-left: 4px;
+}
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.nav-tab {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-tab:hover { color: var(--text); background: var(--bg4); }
+.nav-tab.active {
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 2px 8px rgba(245,158,11,0.3);
+}
+
+.nav-tab .tab-icon { font-size: 1rem; }
+
+/* ── MAIN LAYOUT ── */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── LIBRARY VIEW ── */
+.library-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.library-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  width: 320px;
+  transition: border-color 0.2s;
+}
+
+.search-bar:focus-within { border-color: var(--accent); }
+
+.search-bar input {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  width: 100%;
+  outline: none;
+}
+
+.search-bar input::placeholder { color: var(--text3); }
+
+/* Category filter pills */
+.cat-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cat-pill {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.cat-pill:hover { border-color: var(--text3); color: var(--text); }
+.cat-pill.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+/* Template cards grid */
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.tpl-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.tpl-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.tpl-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.tpl-card:hover::before { opacity: 1; }
+
+.tpl-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.tpl-badge.image { background: rgba(244,114,182,0.15); color: var(--pink); }
+.tpl-badge.llm { background: rgba(96,165,250,0.15); color: var(--blue); }
+.tpl-badge.code { background: rgba(52,211,153,0.15); color: var(--green); }
+.tpl-badge.general { background: rgba(167,139,250,0.15); color: var(--purple); }
+
+.tpl-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.tpl-card p {
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.tpl-card .tpl-use {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tpl-card:hover .tpl-use { opacity: 1; }
+
+/* ── BUILDER VIEW ── */
+.builder-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .builder-layout { grid-template-columns: 1fr; }
+}
+
+.builder-sidebar {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  position: sticky;
+  top: 84px;
+}
+
+.builder-sidebar h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+  margin-bottom: 1rem;
+}
+
+.step-list { list-style: none; }
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.88rem;
+  color: var(--text2);
+}
+
+.step-item:hover { background: var(--bg3); color: var(--text); }
+
+.step-item.active { background: var(--accent-glow); color: var(--accent); }
+.step-item.completed { color: var(--green); }
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.step-item.active .step-num { border-color: var(--accent); background: var(--accent); color: #000; }
+.step-item.completed .step-num { border-color: var(--green); background: var(--green); color: #000; }
+
+/* Builder main area */
+.builder-main {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  min-height: 500px;
+}
+
+.builder-step { display: none; }
+.builder-step.active { display: block; }
+
+.builder-step h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.builder-step .step-desc {
+  color: var(--text2);
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Form controls */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+
+.form-group textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.form-group select { cursor: pointer; }
+
+.form-group select option { background: var(--bg3); }
+
+/* Chips selection */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.chip:hover { border-color: var(--text3); color: var(--text); }
+.chip.selected { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+
+/* Range slider */
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.range-row input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: var(--bg4);
+  border-radius: 3px;
+  border: none;
+  padding: 0;
+}
+
+.range-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(245,158,11,0.3);
+}
+
+.range-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Nav buttons */
+.builder-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn {
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover { border-color: var(--text3); background: var(--bg4); }
+.btn.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+.btn.primary:hover { background: var(--accent2); }
+
+/* ── PREVIEW / RESULT ── */
+.preview-area {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.preview-area h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+  margin-bottom: 1rem;
+}
+
+.preview-content {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.copy-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--green);
+  color: #000;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .header-inner { flex-direction: column; height: auto; padding: 12px 0; gap: 8px; }
+  .search-bar { width: 100%; }
+  main { padding: 1rem; }
+  .builder-main { padding: 1.25rem; }
+  .templates-grid { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tpl-card { animation: fadeIn 0.3s ease both; }
+.tpl-card:nth-child(2) { animation-delay: 0.05s; }
+.tpl-card:nth-child(3) { animation-delay: 0.1s; }
+.tpl-card:nth-child(4) { animation-delay: 0.15s; }
+.tpl-card:nth-child(5) { animation-delay: 0.2s; }
+.tpl-card:nth-child(6) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Prompt Studio</span>
+      <span class="logo-tag">v1.0</span>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-view="library">
+        <span class="tab-icon">📚</span> Bibliothèque
+      </button>
+      <button class="nav-tab" data-view="builder">
+        <span class="tab-icon">🔧</span> Constructeur
+      </button>
+      <button class="nav-tab" data-view="freeform">
+        <span class="tab-icon">✍️</span> Libre
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- TOAST -->
+<div class="copy-toast" id="toast">Copié dans le presse-papiers !</div>
+
+<!-- MAIN -->
+<main>
+
+<!-- ═══════════ LIBRARY VIEW ═══════════ -->
+<div class="view active" id="view-library">
+  <div class="library-header">
+    <h2>📚 Templates de prompts</h2>
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Rechercher un template...">
+    </div>
+  </div>
+  <div class="cat-filters" id="catFilters">
+    <button class="cat-pill active" data-cat="all">Tous</button>
+    <button class="cat-pill" data-cat="image">🎨 Image</button>
+    <button class="cat-pill" data-cat="llm">🤖 LLM</button>
+    <button class="cat-pill" data-cat="code">💻 Code</button>
+    <button class="cat-pill" data-cat="general">🌐 Général</button>
+  </div>
+  <div class="templates-grid" id="templatesGrid"></div>
+</div>
+
+<!-- ═══════════ BUILDER VIEW ═══════════ -->
+<div class="view" id="view-builder">
+  <div class="builder-layout">
+    <aside class="builder-sidebar">
+      <h3>Étapes</h3>
+      <ul class="step-list" id="stepList"></ul>
+    </aside>
+    <div class="builder-main">
+      <!-- Step 1: Type -->
+      <div class="builder-step active" data-step="0">
+        <h2>Type de prompt</h2>
+        <p class="step-desc">Choisissez le type de prompt que vous souhaitez créer.</p>
+        <div class="chips" id="typeChips">
+          <div class="chip" data-val="image">🎨 Génération d'image</div>
+          <div class="chip" data-val="llm">🤖 LLM / Chatbot</div>
+          <div class="chip" data-val="code">💻 Code / Dev</div>
+          <div class="chip" data-val="general">🌐 Général</div>
+        </div>
+      </div>
+
+      <!-- Step 2: Sujet -->
+      <div class="builder-step" data-step="1">
+        <h2>Sujet & Contexte</h2>
+        <p class="step-desc">Décrivez le sujet principal et le contexte de votre prompt.</p>
+        <div class="form-group">
+          <label>Sujet principal</label>
+          <input type="text" id="bSubject" placeholder="Ex: Portrait photoréaliste, Analyse de données, API REST...">
+        </div>
+        <div class="form-group">
+          <label>Contexte / Objectif</label>
+          <textarea id="bContext" placeholder="Décrivez l'objectif, le contexte d'utilisation, le résultat attendu..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Public cible</label>
+          <input type="text" id="bAudience" placeholder="Ex: Développeurs senior, clients B2B, usage personnel...">
+        </div>
+      </div>
+
+      <!-- Step 3: Rôle & Ton -->
+      <div class="builder-step" data-step="2">
+        <h2>Rôle & Tonalité</h2>
+        <p class="step-desc">Définissez la personnalité et le style de réponse souhaité.</p>
+        <div class="form-group">
+          <label>Rôle / Persona</label>
+          <input type="text" id="bRole" placeholder="Ex: Expert en UX design, Chef cuisinier, Rédacteur technique...">
+        </div>
+        <div class="form-group">
+          <label>Ton</label>
+          <div class="chips" id="toneChips">
+            <div class="chip" data-val="professionnel">Professionnel</div>
+            <div class="chip" data-val="créatif">Créatif</div>
+            <div class="chip" data-val="académique">Académique</div>
+            <div class="chip" data-val="conversationnel">Conversationnel</div>
+            <div class="chip" data-val="technique">Technique</div>
+            <div class="chip" data-val="humoristique">Humoristique</div>
+            <div class="chip" data-val="persuasif">Persuasif</div>
+            <div class="chip" data-val="pédagogique">Pédagogique</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Langue de sortie</label>
+          <select id="bLang">
+            <option value="français">Français</option>
+            <option value="anglais">Anglais</option>
+            <option value="espagnol">Espagnol</option>
+            <option value="allemand">Allemand</option>
+            <option value="bilingue FR/EN">Bilingue FR/EN</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 4: Détails spécifiques -->
+      <div class="builder-step" data-step="3">
+        <h2>Détails & Contraintes</h2>
+        <p class="step-desc">Affinez les paramètres spécifiques de votre prompt.</p>
+        <div class="form-group">
+          <label>Format de sortie souhaité</label>
+          <div class="chips" id="formatChips">
+            <div class="chip" data-val="texte libre">Texte libre</div>
+            <div class="chip" data-val="liste à puces">Liste à puces</div>
+            <div class="chip" data-val="tableau">Tableau</div>
+            <div class="chip" data-val="JSON">JSON</div>
+            <div class="chip" data-val="Markdown">Markdown</div>
+            <div class="chip" data-val="code">Code</div>
+            <div class="chip" data-val="étapes numérotées">Étapes numérotées</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Longueur cible</label>
+          <div class="range-row">
+            <input type="range" id="bLength" min="1" max="5" value="3">
+            <span class="range-val" id="bLengthVal">Moyen</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Contraintes / Ce qu'il faut éviter</label>
+          <textarea id="bConstraints" placeholder="Ex: Pas de jargon technique, pas plus de 500 mots, ne pas utiliser de listes..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Exemples (optionnel)</label>
+          <textarea id="bExamples" placeholder="Ajoutez un ou plusieurs exemples du résultat attendu..."></textarea>
+        </div>
+      </div>
+
+      <!-- Step 5: Paramètres Image (conditionnel) -->
+      <div class="builder-step" data-step="4">
+        <h2>🎨 Paramètres Image</h2>
+        <p class="step-desc">Options spécifiques pour la génération d'images.</p>
+        <div class="form-group">
+          <label>Style artistique</label>
+          <div class="chips" id="artChips">
+            <div class="chip" data-val="photoréaliste">Photoréaliste</div>
+            <div class="chip" data-val="illustration">Illustration</div>
+            <div class="chip" data-val="peinture à l'huile">Peinture à l'huile</div>
+            <div class="chip" data-val="aquarelle">Aquarelle</div>
+            <div class="chip" data-val="3D render">3D Render</div>
+            <div class="chip" data-val="pixel art">Pixel Art</div>
+            <div class="chip" data-val="anime">Anime</div>
+            <div class="chip" data-val="minimaliste">Minimaliste</div>
+            <div class="chip" data-val="cyberpunk">Cyberpunk</div>
+            <div class="chip" data-val="fantaisie">Fantaisie</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Éclairage</label>
+          <div class="chips" id="lightChips">
+            <div class="chip" data-val="naturel">Naturel</div>
+            <div class="chip" data-val="studio">Studio</div>
+            <div class="chip" data-val="golden hour">Golden hour</div>
+            <div class="chip" data-val="néon">Néon</div>
+            <div class="chip" data-val="dramatique">Dramatique</div>
+            <div class="chip" data-val="clair-obscur">Clair-obscur</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ratio d'image</label>
+          <select id="bRatio">
+            <option value="--ar 1:1">1:1 (Carré)</option>
+            <option value="--ar 16:9">16:9 (Paysage)</option>
+            <option value="--ar 9:16">9:16 (Portrait)</option>
+            <option value="--ar 4:3">4:3</option>
+            <option value="--ar 3:2">3:2</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Paramètres Midjourney (optionnel)</label>
+          <input type="text" id="bMjParams" placeholder="Ex: --v 6 --q 2 --s 750 --chaos 20">
+        </div>
+      </div>
+
+      <!-- Step 6: Preview -->
+      <div class="builder-step" data-step="5">
+        <h2>Votre prompt généré</h2>
+        <p class="step-desc">Voici votre prompt construit étape par étape. Vous pouvez le copier ou le télécharger.</p>
+        <div class="preview-area">
+          <h3>Aperçu du prompt</h3>
+          <div class="preview-content" id="builderPreview"></div>
+          <div class="preview-actions">
+            <button class="btn primary" onclick="copyPrompt('builderPreview')">📋 Copier</button>
+            <button class="btn" onclick="downloadPrompt('builderPreview', 'prompt-studio')">💾 Télécharger .txt</button>
+            <button class="btn" onclick="downloadPromptMD('builderPreview', 'prompt-studio')">📄 Télécharger .md</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="builder-nav">
+        <button class="btn" id="btnPrev" onclick="builderNav(-1)">← Précédent</button>
+        <button class="btn primary" id="btnNext" onclick="builderNav(1)">Suivant →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FREEFORM VIEW ═══════════ -->
+<div class="view" id="view-freeform">
+  <h2 style="font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:1rem;">✍️ Éditeur libre</h2>
+  <p style="color:var(--text2); margin-bottom:1.5rem; font-size:0.9rem;">Composez votre prompt librement avec les outils d'aide à la rédaction.</p>
+
+  <div class="form-group">
+    <label>Raccourcis</label>
+    <div class="chips" id="shortcutChips" style="margin-bottom: 1rem;">
+      <div class="chip" data-insert="Tu es un expert en [DOMAINE]. ">🎭 Rôle</div>
+      <div class="chip" data-insert="Contexte : [DESCRIPTION]. ">📝 Contexte</div>
+      <div class="chip" data-insert="Réponds au format [FORMAT]. ">📐 Format</div>
+      <div class="chip" data-insert="Étape 1 : \nÉtape 2 : \nÉtape 3 : ">📊 Étapes</div>
+      <div class="chip" data-insert="Contraintes : ne pas utiliser [X], limiter à [N] mots. ">⚠️ Contraintes</div>
+      <div class="chip" data-insert="Exemple de sortie attendue :\n---\n[EXEMPLE]\n---\n">💡 Exemple</div>
+      <div class="chip" data-insert="Pense étape par étape avant de répondre. ">🧠 Chain-of-thought</div>
+      <div class="chip" data-insert="Avant de répondre, identifie les hypothèses et biais possibles. ">🔍 Anti-biais</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Votre prompt</label>
+    <textarea id="freeformArea" style="min-height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7;" placeholder="Commencez à écrire votre prompt ici, ou utilisez les raccourcis ci-dessus..."></textarea>
+  </div>
+
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+    <span style="font-size:0.8rem; color:var(--text3);" id="charCount">0 caractères</span>
+    <div class="preview-actions">
+      <button class="btn" onclick="document.getElementById('freeformArea').value=''; updateCharCount();">🗑️ Effacer</button>
+      <button class="btn primary" onclick="copyFreeform()">📋 Copier</button>
+      <button class="btn" onclick="downloadFreeform()">💾 Télécharger .txt</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════
+// TEMPLATES DATABASE
+// ══════════════════════════════════════════
+const TEMPLATES = [
+  {
+    cat: 'image', title: 'Portrait cinématique',
+    desc: 'Prompt pour un portrait stylisé avec éclairage et composition cinéma.',
+    prompt: `[SUJET], portrait cinématique, éclairage Rembrandt, profondeur de champ faible (f/1.4), bokeh doux en arrière-plan, tons chauds ambrés et ombres profondes, grain de film 35mm, composition règle des tiers, regard intense face caméra --ar 3:4 --v 6 --s 800`
+  },
+  {
+    cat: 'image', title: 'Paysage fantastique',
+    desc: 'Scènes épiques de mondes imaginaires avec atmosphère immersive.',
+    prompt: `Paysage fantastique épique : [DESCRIPTION DE LA SCÈNE], lumière volumétrique dorée traversant les nuages, atmosphère mystique, détails ultra fins, style matte painting, palette de couleurs [PALETTE], perspective aérienne, échelle monumentale, 8K --ar 16:9 --v 6 --q 2`
+  },
+  {
+    cat: 'image', title: 'Logo & Branding',
+    desc: 'Création de logo minimaliste et moderne pour une marque.',
+    prompt: `Logo minimaliste pour [NOM DE LA MARQUE], industrie : [SECTEUR], style flat design épuré, icône géométrique, palette limitée à 2-3 couleurs ([COULEURS]), fond blanc, équilibré et mémorisable, vectoriel, adapté à tous les supports --ar 1:1 --v 6 --s 500`
+  },
+  {
+    cat: 'image', title: 'Produit e-commerce',
+    desc: 'Photo produit studio professionnelle pour boutique en ligne.',
+    prompt: `Photo de produit professionnelle : [PRODUIT], fond [COULEUR] uni, éclairage studio trois points, reflets subtils, ombres douces, angle [ANGLE], résolution ultra haute, style catalogue de luxe, couleurs fidèles --ar 1:1 --v 6 --s 600`
+  },
+  {
+    cat: 'llm', title: 'Rédacteur expert',
+    desc: 'Demander à l\'IA de rédiger comme un spécialiste du domaine.',
+    prompt: `Tu es un [RÔLE/EXPERT] avec 15 ans d'expérience en [DOMAINE].
+
+Contexte : [DESCRIPTION DU CONTEXTE]
+
+Ta mission : rédiger [TYPE DE CONTENU] sur le thème "[SUJET]".
+
+Consignes :
+- Ton : [TON SOUHAITÉ]
+- Longueur : [NOMBRE] mots environ
+- Public cible : [AUDIENCE]
+- Inclure : [ÉLÉMENTS À INCLURE]
+- Éviter : [ÉLÉMENTS À ÉVITER]
+- Format : [FORMAT SOUHAITÉ]
+
+Commence par un [ACCROCHE/INTRO] percutant(e) puis structure ta réponse logiquement.`
+  },
+  {
+    cat: 'llm', title: 'Analyse critique',
+    desc: 'Prompt pour une analyse en profondeur avec plusieurs angles.',
+    prompt: `Analyse en profondeur : "[SUJET/TEXTE À ANALYSER]"
+
+Instructions :
+1. Résumé synthétique (3-4 phrases)
+2. Points forts identifiés (avec justifications)
+3. Points faibles ou lacunes (avec justifications)
+4. Comparaison avec [RÉFÉRENCE/STANDARD]
+5. Recommandations d'amélioration concrètes
+6. Conclusion et note globale sur 10
+
+Approche : sois objectif, factuel et constructif. Cite des exemples précis tirés du contenu analysé. Ton : [TON].`
+  },
+  {
+    cat: 'llm', title: 'Brainstorming structuré',
+    desc: 'Générer des idées créatives de manière organisée.',
+    prompt: `Tu es un facilitateur de brainstorming créatif.
+
+Sujet : [SUJET/PROBLÉMATIQUE]
+Contexte : [CONTEXTE]
+Contraintes : [CONTRAINTES]
+
+Génère des idées en 3 catégories :
+
+🟢 Idées classiques / sûres (5 idées)
+— Approches éprouvées et réalistes.
+
+🟡 Idées innovantes (5 idées)
+— Solutions originales qui sortent des sentiers battus.
+
+🔴 Idées radicales / disruptives (3 idées)
+— Concepts audacieux, sans filtre, qui challengent les conventions.
+
+Pour chaque idée : un titre accrocheur + 2 phrases d'explication + niveau d'effort (faible/moyen/élevé).`
+  },
+  {
+    cat: 'llm', title: 'Traducteur contextualisé',
+    desc: 'Traduction précise adaptée au registre et au contexte.',
+    prompt: `Tu es traducteur professionnel [LANGUE SOURCE] → [LANGUE CIBLE], spécialisé en [DOMAINE].
+
+Texte à traduire :
+"""
+[TEXTE]
+"""
+
+Consignes :
+- Registre : [formel / informel / technique / littéraire]
+- Préserver le ton et les nuances de l'original
+- Adapter les expressions idiomatiques (ne pas traduire littéralement)
+- Conserver le formatage d'origine
+- Si un terme n'a pas d'équivalent exact, le conserver entre crochets avec une note explicative
+- Signaler toute ambiguïté avec [NOTE: ...]`
+  },
+  {
+    cat: 'code', title: 'Développeur full-stack',
+    desc: 'Générer du code propre avec bonnes pratiques et explications.',
+    prompt: `Tu es un développeur senior full-stack spécialisé en [TECHNOLOGIES].
+
+Tâche : [DESCRIPTION DE LA FONCTIONNALITÉ]
+
+Contexte technique :
+- Stack : [TECHNOLOGIES ET VERSIONS]
+- Architecture : [ARCHITECTURE]
+- Contraintes : [CONTRAINTES TECHNIQUES]
+
+Exigences :
+1. Code propre, typé et commenté
+2. Gestion d'erreurs robuste (try/catch, validation)
+3. Tests unitaires inclus
+4. Respecter les principes SOLID
+5. Performance optimisée
+6. Sécurité (sanitization, validation des inputs)
+
+Fournis :
+- Le code complet et fonctionnel
+- Les dépendances nécessaires
+- Un README minimal avec instructions d'utilisation
+- Les cas limites identifiés`
+  },
+  {
+    cat: 'code', title: 'Debug & Refactoring',
+    desc: 'Analyser et corriger un bug ou refactoriser du code existant.',
+    prompt: `Tu es un senior developer spécialisé en [LANGAGE/FRAMEWORK].
+
+Code à analyser :
+\`\`\`[LANGAGE]
+[CODE ICI]
+\`\`\`
+
+Problème rencontré : [DESCRIPTION DU BUG / COMPORTEMENT ATTENDU vs OBTENU]
+
+Instructions :
+1. Identifie la cause racine du problème
+2. Explique pourquoi le bug se produit (de manière pédagogique)
+3. Propose la correction avec le code modifié
+4. Suggère des améliorations de refactoring si pertinentes
+5. Identifie d'éventuelles failles de sécurité ou performances
+6. Fournis un test pour valider la correction
+
+Sois précis et montre les diffs (avant/après) pour chaque modification.`
+  },
+  {
+    cat: 'code', title: 'Architecture & Design',
+    desc: 'Concevoir l\'architecture d\'un projet ou d\'une feature.',
+    prompt: `Tu es architecte logiciel senior.
+
+Projet : [NOM DU PROJET]
+Description : [DESCRIPTION]
+Scale attendu : [NOMBRE D'UTILISATEURS / REQUÊTES]
+
+Conçois l'architecture en couvrant :
+
+1. **Vue d'ensemble** : diagramme en ASCII de l'architecture
+2. **Stack technique** : choix technologiques justifiés
+3. **Modèle de données** : schéma des entités principales
+4. **API Design** : endpoints principaux (REST/GraphQL)
+5. **Sécurité** : authentification, autorisation, protections
+6. **Scalabilité** : stratégie de scaling et points de contention
+7. **Monitoring** : métriques clés et alertes recommandées
+8. **Trade-offs** : compromis acceptés et alternatives envisagées
+
+Sois pragmatique et justifie chaque décision technique.`
+  },
+  {
+    cat: 'code', title: 'Requête SQL avancée',
+    desc: 'Construire des requêtes SQL complexes et optimisées.',
+    prompt: `Tu es un expert bases de données (SQL) spécialisé en [SGBD : PostgreSQL / MySQL / etc.].
+
+Schéma de la base :
+[DESCRIPTION DES TABLES ET RELATIONS]
+
+Besoin : [DESCRIPTION DE LA DONNÉE À EXTRAIRE]
+
+Exigences :
+- Requête optimisée (utilisation d'index, éviter les N+1)
+- Commentaires SQL explicatifs
+- Si complexe : découper en CTEs lisibles
+- Expliquer le plan d'exécution attendu
+- Proposer les index recommandés si manquants
+- Variante avec pagination si applicable`
+  },
+  {
+    cat: 'general', title: 'Méthode Socratique',
+    desc: 'Apprendre un sujet par questions-réponses progressives.',
+    prompt: `Tu es un tuteur qui utilise la méthode socratique.
+
+Sujet : [SUJET À APPRENDRE]
+Mon niveau actuel : [DÉBUTANT / INTERMÉDIAIRE / AVANCÉ]
+
+Règles :
+- Ne donne JAMAIS la réponse directement
+- Pose des questions guidées qui mènent à la compréhension
+- Commence par les fondamentaux, puis complexifie progressivement
+- Si je me trompe, reformule ta question pour me guider
+- Utilise des analogies du quotidien pour illustrer les concepts
+- Après 3-4 échanges, fais un résumé de ce que j'ai compris
+- Adapte la difficulté en fonction de mes réponses
+
+Commence par évaluer ma compréhension actuelle avec une première question.`
+  },
+  {
+    cat: 'general', title: 'Plan d\'action SMART',
+    desc: 'Transformer un objectif vague en plan structuré et actionnable.',
+    prompt: `Tu es un coach en productivité et gestion de projet.
+
+Mon objectif : [OBJECTIF]
+Délai souhaité : [DÉLAI]
+Ressources disponibles : [RESSOURCES]
+Obstacles anticipés : [OBSTACLES]
+
+Transforme cet objectif en plan SMART :
+- **S**pécifique : reformule l'objectif avec précision
+- **M**esurable : définis les KPIs et métriques de succès
+- **A**tteignable : évalue la faisabilité et ajuste si nécessaire
+- **R**éaliste : identifie les dépendances et prérequis
+- **T**emporel : crée un calendrier avec jalons hebdomadaires
+
+Fournis ensuite :
+1. Les 3 premières actions à faire dès aujourd'hui
+2. La liste des livrables par semaine
+3. Les points de contrôle et critères de réussite
+4. Un plan B en cas de blocage`
+  },
+  {
+    cat: 'general', title: 'Revue de document',
+    desc: 'Relecture et feedback structuré sur un texte.',
+    prompt: `Tu es relecteur/éditeur professionnel spécialisé en [TYPE DE DOCUMENT].
+
+Document à relire :
+"""
+[TEXTE]
+"""
+
+Effectue une revue complète :
+
+1. **Clarté** : le message est-il clair et compréhensible ?
+2. **Structure** : la progression logique est-elle cohérente ?
+3. **Style** : le ton est-il adapté à [AUDIENCE] ?
+4. **Grammaire & orthographe** : liste des corrections
+5. **Impact** : l'introduction accroche-t-elle ? La conclusion est-elle mémorable ?
+6. **Suggestions** : 3 améliorations concrètes prioritaires
+
+Format : utilise des commentaires inline [COMMENTAIRE] puis un résumé global à la fin.`
+  },
+  {
+    cat: 'general', title: 'Comparatif décisionnel',
+    desc: 'Comparer des options pour prendre une décision éclairée.',
+    prompt: `Tu es un analyste décisionnel objectif et rigoureux.
+
+Décision à prendre : [DÉCISION]
+Options à comparer :
+- Option A : [DESCRIPTION]
+- Option B : [DESCRIPTION]
+- Option C : [DESCRIPTION] (optionnel)
+
+Critères importants pour moi : [CRITÈRES PRIORITAIRES]
+Contexte : [CONTEXTE / CONTRAINTES]
+
+Analyse chaque option selon :
+1. Avantages (3-5 points)
+2. Inconvénients (3-5 points)
+3. Coûts (temps, argent, énergie)
+4. Risques et mitigation possible
+5. Score sur chaque critère (/10)
+
+Conclus avec :
+- Un tableau comparatif synthétique
+- Ta recommandation argumentée
+- Les conditions dans lesquelles chaque option serait la meilleure`
+  }
+];
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+  });
+});
+
+// ══════════════════════════════════════════
+// LIBRARY
+// ══════════════════════════════════════════
+let currentCat = 'all';
+
+function renderTemplates(filter = '', cat = 'all') {
+  const grid = document.getElementById('templatesGrid');
+  const filtered = TEMPLATES.filter(t => {
+    const matchCat = cat === 'all' || t.cat === cat;
+    const matchSearch = !filter || t.title.toLowerCase().includes(filter.toLowerCase()) || t.desc.toLowerCase().includes(filter.toLowerCase());
+    return matchCat && matchSearch;
+  });
+  grid.innerHTML = filtered.map(t => `
+    <div class="tpl-card" onclick="useTemplate(\`${t.prompt.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">
+      <span class="tpl-badge ${t.cat}">${{image:'🎨 Image', llm:'🤖 LLM', code:'💻 Code', general:'🌐 Général'}[t.cat]}</span>
+      <h3>${t.title}</h3>
+      <p>${t.desc}</p>
+      <span class="tpl-use">Utiliser ce template →</span>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    currentCat = pill.dataset.cat;
+    renderTemplates(document.getElementById('searchInput').value, currentCat);
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  renderTemplates(e.target.value, currentCat);
+});
+
+function useTemplate(prompt) {
+  document.getElementById('freeformArea').value = prompt;
+  updateCharCount();
+  // Switch to freeform view
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-view="freeform"]').classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-freeform').classList.add('active');
+  document.getElementById('freeformArea').focus();
+}
+
+renderTemplates();
+
+// ══════════════════════════════════════════
+// BUILDER
+// ══════════════════════════════════════════
+const STEPS = [
+  { label: 'Type de prompt' },
+  { label: 'Sujet & Contexte' },
+  { label: 'Rôle & Tonalité' },
+  { label: 'Détails & Contraintes' },
+  { label: 'Paramètres Image' },
+  { label: 'Résultat final' }
+];
+
+let currentStep = 0;
+let builderData = { type: '', tones: [], formats: [], artStyles: [], lights: [] };
+
+function renderStepList() {
+  document.getElementById('stepList').innerHTML = STEPS.map((s, i) => {
+    // Hide image step if not image type
+    if (i === 4 && builderData.type !== 'image') return '';
+    const cls = i === currentStep ? 'active' : (i < currentStep ? 'completed' : '');
+    return `<li class="step-item ${cls}" onclick="goToStep(${i})">
+      <span class="step-num">${i < currentStep ? '✓' : i + 1}</span>
+      ${s.label}
+    </li>`;
+  }).join('');
+}
+
+function goToStep(n) {
+  // Skip image step if not image type
+  if (n === 4 && builderData.type !== 'image') n = currentStep < 4 ? 5 : 3;
+  currentStep = n;
+  document.querySelectorAll('.builder-step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-step="${n}"]`).classList.add('active');
+  renderStepList();
+
+  // Nav buttons
+  document.getElementById('btnPrev').style.visibility = n === 0 ? 'hidden' : 'visible';
+  const isLast = (builderData.type === 'image' && n === 5) || (builderData.type !== 'image' && n === 5);
+  document.getElementById('btnNext').textContent = n === (builderData.type === 'image' ? 4 : 3) ? 'Générer le prompt →' : (n >= 5 ? '✓ Terminé' : 'Suivant →');
+
+  if (n === 5) generateBuilderPrompt();
+}
+
+function builderNav(dir) {
+  let next = currentStep + dir;
+  // Skip image step if not image type
+  if (next === 4 && builderData.type !== 'image') next += dir;
+  if (next < 0) next = 0;
+  if (next > 5) next = 5;
+  goToStep(next);
+}
+
+// Chips interactions
+function setupChips(containerId, dataKey, multi = false) {
+  document.querySelectorAll(`#${containerId} .chip`).forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (multi) {
+        chip.classList.toggle('selected');
+        const selected = [...document.querySelectorAll(`#${containerId} .chip.selected`)].map(c => c.dataset.val);
+        builderData[dataKey] = selected;
+      } else {
+        document.querySelectorAll(`#${containerId} .chip`).forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        builderData[dataKey] = chip.dataset.val;
+      }
+    });
+  });
+}
+
+setupChips('typeChips', 'type');
+setupChips('toneChips', 'tones', true);
+setupChips('formatChips', 'formats', true);
+setupChips('artChips', 'artStyles', true);
+setupChips('lightChips', 'lights', true);
+
+// Length slider
+const lengthLabels = ['Très court', 'Court', 'Moyen', 'Long', 'Très long'];
+document.getElementById('bLength').addEventListener('input', e => {
+  document.getElementById('bLengthVal').textContent = lengthLabels[e.target.value - 1];
+});
+
+// Generate prompt
+function generateBuilderPrompt() {
+  const subject = document.getElementById('bSubject').value || '[SUJET]';
+  const context = document.getElementById('bContext').value;
+  const audience = document.getElementById('bAudience').value;
+  const role = document.getElementById('bRole').value;
+  const tones = builderData.tones;
+  const lang = document.getElementById('bLang').value;
+  const formats = builderData.formats;
+  const length = lengthLabels[document.getElementById('bLength').value - 1];
+  const constraints = document.getElementById('bConstraints').value;
+  const examples = document.getElementById('bExamples').value;
+
+  let prompt = '';
+
+  if (builderData.type === 'image') {
+    const styles = builderData.artStyles;
+    const lights = builderData.lights;
+    const ratio = document.getElementById('bRatio').value;
+    const mjParams = document.getElementById('bMjParams').value;
+
+    prompt = `${subject}`;
+    if (styles.length) prompt += `, style ${styles.join(', ')}`;
+    if (lights.length) prompt += `, éclairage ${lights.join(' et ')}`;
+    if (context) prompt += `, ${context}`;
+    prompt += `, ${length === 'Très court' ? 'composition simple' : length === 'Très long' ? 'ultra détaillé, 8K, maximum de détails' : 'détails soignés'}`;
+    prompt += ` ${ratio}`;
+    if (mjParams) prompt += ` ${mjParams}`;
+  } else {
+    // LLM / Code / General prompt
+    if (role) prompt += `Tu es ${role}.\n\n`;
+    if (context) prompt += `Contexte : ${context}\n\n`;
+    prompt += `Tâche : ${subject}\n`;
+    if (audience) prompt += `\nPublic cible : ${audience}\n`;
+    if (tones.length) prompt += `Ton : ${tones.join(', ')}\n`;
+    if (lang !== 'français') prompt += `Langue de réponse : ${lang}\n`;
+    if (formats.length) prompt += `Format de sortie : ${formats.join(', ')}\n`;
+    prompt += `Longueur : ${length}\n`;
+    if (constraints) prompt += `\nContraintes :\n${constraints}\n`;
+    if (examples) prompt += `\nExemple de résultat attendu :\n---\n${examples}\n---\n`;
+  }
+
+  document.getElementById('builderPreview').textContent = prompt.trim();
+}
+
+renderStepList();
+
+// ══════════════════════════════════════════
+// FREEFORM
+// ══════════════════════════════════════════
+document.querySelectorAll('#shortcutChips .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const area = document.getElementById('freeformArea');
+    const start = area.selectionStart;
+    const before = area.value.substring(0, start);
+    const after = area.value.substring(area.selectionEnd);
+    area.value = before + chip.dataset.insert + after;
+    area.focus();
+    area.selectionStart = area.selectionEnd = start + chip.dataset.insert.length;
+    updateCharCount();
+  });
+});
+
+function updateCharCount() {
+  const count = document.getElementById('freeformArea').value.length;
+  document.getElementById('charCount').textContent = `${count} caractère${count > 1 ? 's' : ''}`;
+}
+
+document.getElementById('freeformArea').addEventListener('input', updateCharCount);
+
+// ══════════════════════════════════════════
+// EXPORT FUNCTIONS
+// ══════════════════════════════════════════
+function showToast(msg = 'Copié dans le presse-papiers !') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function copyPrompt(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => showToast());
+}
+
+function copyFreeform() {
+  const text = document.getElementById('freeformArea').value;
+  navigator.clipboard.writeText(text).then(() => showToast());
+}
+
+function downloadPrompt(id, name) {
+  const text = document.getElementById(id).textContent;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${name}-${Date.now()}.txt`;
+  a.click();
+}
+
+function downloadPromptMD(id, name) {
+  const text = document.getElementById(id).textContent;
+  const md = `# Prompt\n\n\`\`\`\n${text}\n\`\`\`\n\n---\n*Généré par Prompt Studio — ${new Date().toLocaleDateString('fr-FR')}*`;
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${name}-${Date.now()}.md`;
+  a.click();
+}
+
+function downloadFreeform() {
+  const text = document.getElementById('freeformArea').value;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `prompt-libre-${Date.now()}.txt`;
+  a.click();
+}
+</script>
+</body>
+</html>
