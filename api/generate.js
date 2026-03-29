@@ -1,3 +1,35 @@
+const SYSTEM_PROMPT = `Tu es un assistant spécialisé dans la création de prompts optimisés pour les modèles de langage (LLM). Ta mission est de transformer les idées des utilisateurs en prompts efficaces, clairs et structurés.
+
+## Instructions principales :
+1. Analyse la demande pour comprendre l'objectif
+2. Identifie le type de tâche (création, analyse, résolution de problème, etc.)
+3. Détermine le niveau de détail et de complexité requis
+4. Structure le prompt selon les meilleures pratiques
+
+## Chaque prompt généré doit inclure :
+- **Contexte** : Définition claire du rôle et de la situation
+- **Objectif** : Ce que l'utilisateur veut accomplir
+- **Instructions spécifiques** : Étapes détaillées et contraintes
+- **Format de sortie** : Structure attendue de la réponse
+- **Exemples** (si pertinent) : Illustrations pour clarifier
+
+## Principes d'optimisation :
+- Utilise un langage précis et sans ambiguïté
+- Inclus des contraintes claires pour éviter les dérives
+- Adapte le ton et le style au contexte d'usage
+- Intègre des éléments de vérification de qualité
+- Prévois la gestion des cas particuliers
+
+## Règle absolue :
+Réponds UNIQUEMENT avec le prompt généré. Pas d'introduction, pas d'explication, pas de commentaire. Le prompt doit être directement utilisable tel quel.`;
+
+const CATEGORY_CONTEXT = {
+  image: "Optimise pour la génération d'images (Midjourney, DALL-E, Stable Diffusion). Style descriptif avec termes visuels : composition, éclairage, style artistique, détails techniques (ratio, qualité). Structure : sujet → style → éclairage → ambiance → paramètres techniques.",
+  llm: "Optimise pour un LLM (ChatGPT, Claude). Structure avec : rôle/persona, contexte, tâche précise, format de sortie attendu, contraintes, ton souhaité.",
+  code: "Optimise pour du développement. Inclure : langage/framework, objectif fonctionnel, contraintes techniques, format attendu (code commenté, tests, architecture), bonnes pratiques à respecter.",
+  general: "Prompt clair, structuré et efficace pour un usage général avec un LLM."
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -13,14 +45,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'API key not configured' });
   }
 
-  const categoryContext = {
-    image: "Le prompt doit être optimisé pour la génération d'images (Midjourney, DALL-E, Stable Diffusion). Utilise un style descriptif avec des termes visuels : composition, éclairage, style artistique, détails techniques (ratio, qualité). Structure : sujet principal, style, éclairage, ambiance, détails techniques, paramètres.",
-    llm: "Le prompt doit être optimisé pour un LLM (ChatGPT, Claude). Structure avec : rôle/persona, contexte, tâche précise, format de sortie, contraintes, ton souhaité.",
-    code: "Le prompt doit être optimisé pour demander du code à un LLM. Inclure : langage/framework, objectif, contraintes techniques, format attendu (code commenté, avec tests, etc.), bonnes pratiques à respecter.",
-    general: "Le prompt doit être clair, structuré et efficace pour un usage général avec un LLM."
-  };
-
-  const ctx = categoryContext[category] || categoryContext.general;
+  const ctx = CATEGORY_CONTEXT[category] || CATEGORY_CONTEXT.general;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -33,19 +58,16 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2048,
+        system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `Tu es un expert en prompt engineering. L'utilisateur décrit ce qu'il veut obtenir, et tu dois générer le prompt parfait et prêt à l'emploi.
-
-Catégorie : ${category || 'general'}
+          content: `Catégorie : ${category || 'general'}
 ${ctx}
 
-Description de l'utilisateur :
+Demande de l'utilisateur :
 ---
 ${description}
----
-
-Génère un prompt complet, structuré et optimisé. Réponds UNIQUEMENT avec le prompt généré, sans explication, sans introduction, sans commentaire. Le prompt doit être directement utilisable.`
+---`
         }]
       })
     });
